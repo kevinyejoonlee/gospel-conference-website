@@ -19,9 +19,11 @@ This project uses Next.js server actions (Stripe integration), which requires se
 **Framework preset**: Next.js
 
 **Build configuration**:
-- **Build command**: `npm install --legacy-peer-deps && npx @cloudflare/next-on-pages@latest`
+- **Build command**: `npm run cf-build`
 - **Build output directory**: `.vercel/output/static`
 - **Root directory**: `/` (leave as default)
+
+**Note**: The build command uses `npm run cf-build` which includes `--legacy-peer-deps` to handle the Next.js 16 compatibility issue with `@cloudflare/next-on-pages`.
 
 ### 3. Set Environment Variables
 
