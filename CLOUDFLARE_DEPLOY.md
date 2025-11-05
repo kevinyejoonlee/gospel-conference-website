@@ -66,7 +66,15 @@ Click **Save and deploy**. The first deployment may take a few minutes.
    - Click **Set up a custom domain**
    - Enter your domain
 
-### 6. SSL/TLS Settings
+### 6. Node.js Compatibility Flag
+
+The `wrangler.toml` file in the repository automatically configures the `nodejs_compat` compatibility flag. However, you should also verify it's enabled in Cloudflare Pages:
+
+1. Go to **Pages → Your Project → Settings → Functions**
+2. Under **Compatibility Flags**, ensure `nodejs_compat` is enabled for both Production and Preview environments
+3. If not automatically enabled by `wrangler.toml`, manually add it
+
+### 7. SSL/TLS Settings
 
 Cloudflare automatically provides SSL certificates. Ensure:
 - **SSL/TLS encryption mode** is set to **Full** (in DNS → SSL/TLS)
