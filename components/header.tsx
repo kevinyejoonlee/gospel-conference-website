@@ -33,14 +33,14 @@ export function Header() {
       <div className="max-w-7xl mx-auto px-4 flex items-center justify-between">
         <div className="flex items-center gap-3">
           <img
-            src="/images/logo-black-bg.png"
+            src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/efd5328a-9f28-4cc6-aa7a-772c9d70d630-RkDCgi6OMRgbdJKxlKBMbjP5sREnR8.png"
             alt="Gospel Conference Logo"
             className="w-10 h-10 object-contain"
             style={{ background: "transparent" }}
             onError={(e) => {
-              // Fallback to original if new logo fails
+              // Hide image if it fails to load
               const target = e.target as HTMLImageElement
-              target.src = "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/efd5328a-9f28-4cc6-aa7a-772c9d70d630-RkDCgi6OMRgbdJKxlKBMbjP5sREnR8.png"
+              target.style.display = "none"
             }}
           />
         </div>

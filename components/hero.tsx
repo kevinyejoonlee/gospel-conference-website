@@ -57,7 +57,7 @@ export function Hero() {
           {/* Large Logo */}
           <div className="mb-6 md:mb-8 lg:mb-10">
             <img
-              src="/images/logo-black-bg.png"
+              src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/efd5328a-9f28-4cc6-aa7a-772c9d70d630-RkDCgi6OMRgbdJKxlKBMbjP5sREnR8.png"
               alt="Gospel Conference Logo"
               className="h-16 md:h-24 lg:h-32 w-auto mx-auto drop-shadow-2xl"
               style={{ 
@@ -65,9 +65,9 @@ export function Hero() {
                 background: 'transparent'
               }}
               onError={(e) => {
-                // Fallback to original if new logo fails
+                // Hide image if it fails to load
                 const target = e.target as HTMLImageElement
-                target.src = "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/efd5328a-9f28-4cc6-aa7a-772c9d70d630-RkDCgi6OMRgbdJKxlKBMbjP5sREnR8.png"
+                target.style.display = "none"
               }}
             />
           </div>
