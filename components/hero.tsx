@@ -1,10 +1,21 @@
 "use client"
 
-import { useState, useRef } from "react"
+import { useState, useRef, useEffect } from "react"
 
 export function Hero() {
   const [videoError, setVideoError] = useState(false)
+  const [isMobile, setIsMobile] = useState(false)
   const videoRef = useRef<HTMLVideoElement>(null)
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768)
+    }
+    
+    checkMobile()
+    window.addEventListener('resize', checkMobile)
+    return () => window.removeEventListener('resize', checkMobile)
+  }, [])
 
   const scrollToRegistration = () => {
     const element = document.getElementById("registration")
@@ -27,7 +38,10 @@ export function Hero() {
           playsInline
           onError={handleVideoError}
           className="absolute inset-0 w-full h-full object-cover"
-          style={{ zIndex: 0 }}
+          style={{ 
+            zIndex: 0,
+            objectPosition: isMobile ? '65% center' : 'center center'
+          }}
         >
           <source src="/hero-background.mp4" type="video/mp4" />
         </video>
