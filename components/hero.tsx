@@ -1,30 +1,61 @@
 "use client"
 
+import { useState, useRef } from "react"
+
 export function Hero() {
+  const [videoError, setVideoError] = useState(false)
+  const videoRef = useRef<HTMLVideoElement>(null)
+
   const scrollToRegistration = () => {
     const element = document.getElementById("registration")
     element?.scrollIntoView({ behavior: "smooth" })
   }
 
-  return (
-    <section
-      className="relative w-full h-screen overflow-hidden flex items-center justify-center"
-      style={{
-        backgroundImage:
-          'url("https://hebbkx1anhila5yf.public.blob.vercel-storage.com/ChatGPT%20Image%20Nov%205%2C%202025%2C%2005_17_33%20PM-JN4IG8TfhQIvCUsGx2O5VWaapl1hiU.png")',
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-        backgroundAttachment: "fixed",
-      }}
-    >
-      {/* Dark overlay for text readability */}
-      <div className="absolute inset-0 bg-black/30" />
+  const handleVideoError = () => {
+    setVideoError(true)
+  }
 
-      {/* Content container */}
-      <div className="relative z-10 max-w-6xl w-full px-4 md:px-8 py-8 md:py-12">
-        <div className="flex flex-col items-center justify-center min-h-screen space-y-4 md:space-y-6 text-center">
+  return (
+    <section className="relative w-full min-h-screen overflow-hidden">
+      {/* Video Background */}
+      {!videoError && (
+        <video
+          ref={videoRef}
+          autoPlay
+          loop
+          muted
+          playsInline
+          onError={handleVideoError}
+          className="absolute inset-0 w-full h-full object-cover"
+          style={{ zIndex: 0 }}
+        >
+          <source src="/hero-background.mp4" type="video/mp4" />
+        </video>
+      )}
+      
+      {/* Fallback background image (shown if video fails) */}
+      {videoError && (
+        <div
+          className="absolute inset-0 w-full h-full object-cover"
+          style={{
+            backgroundImage:
+              'url("https://hebbkx1anhila5yf.public.blob.vercel-storage.com/ChatGPT%20Image%20Nov%205%2C%202025%2C%2005_17_33%20PM-JN4IG8TfhQIvCUsGx2O5VWaapl1hiU.png")',
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            zIndex: 0,
+          }}
+        />
+      )}
+      
+      {/* Dark overlay for text readability */}
+      <div className="absolute inset-0 bg-black/30 z-10" />
+
+      {/* Content container - centered in viewport */}
+      <div className="relative z-20 max-w-6xl w-full mx-auto px-4 md:px-8 flex flex-col">
+        {/* Main content - centered vertically in viewport */}
+        <div className="flex flex-col items-center justify-center text-center min-h-screen">
           {/* Large Logo */}
-          <div className="mb-2 md:mb-4 mt-8 md:mt-12 lg:mt-16">
+          <div className="mb-6 md:mb-8 lg:mb-10">
             <img
               src="/images/logo-black-bg.png"
               alt="Gospel Conference Logo"
@@ -42,7 +73,7 @@ export function Hero() {
           </div>
 
           {/* Main Conference Title */}
-          <div className="space-y-1 md:space-y-2">
+          <div className="space-y-2 md:space-y-3 mb-4 md:mb-6">
             <h1 className="text-3xl md:text-5xl lg:text-6xl xl:text-7xl font-black leading-tight text-white drop-shadow-lg tracking-tight">
               GOSPEL CONFERENCE
             </h1>
@@ -52,14 +83,14 @@ export function Hero() {
           </div>
 
           {/* Theme/Subtitle */}
-          <div className="space-y-1 md:space-y-2 pt-2 md:pt-4">
+          <div className="mb-6 md:mb-8">
             <h2 className="text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-black leading-tight text-sky-400 drop-shadow-lg">
               CHRIST THE TRUE AND BETTER
             </h2>
           </div>
 
-          {/* Event details card */}
-          <div className="space-y-2 md:space-y-3 bg-white/10 backdrop-blur-md rounded-xl p-4 md:p-6 border border-white/20 max-w-md mt-4 md:mt-6">
+          {/* Event details card - positioned to be visible in viewport */}
+          <div className="space-y-2 md:space-y-3 bg-white/10 backdrop-blur-md rounded-xl p-4 md:p-6 border border-white/20 max-w-md">
             <p className="text-base md:text-lg font-semibold text-white">GRADES 7-12</p>
             <p className="text-xs md:text-sm text-white/80">Ages 12-18</p>
 
@@ -69,17 +100,22 @@ export function Hero() {
             <p className="text-base md:text-lg font-semibold text-white pt-2">DAE HAN PRAYER HOUSE</p>
             <p className="text-xs md:text-sm text-white/80">Toronto, Ontario</p>
           </div>
+        </div>
 
+        {/* Button section - positioned below viewport, requires scroll */}
+        <div className="flex flex-col items-center justify-center text-center min-h-[50vh] pb-16 md:pb-20">
           {/* CTA Button */}
-          <button
-            onClick={scrollToRegistration}
-            className="bg-yellow-400 hover:bg-yellow-300 text-black px-8 md:px-12 lg:px-16 py-4 md:py-5 lg:py-6 rounded-lg font-bold text-lg md:text-xl lg:text-2xl transition-all hover:scale-105 shadow-lg mt-2 md:mt-4"
-          >
-            REGISTER NOW
-          </button>
+          <div className="mb-4 md:mb-6">
+            <button
+              onClick={scrollToRegistration}
+              className="bg-yellow-400 hover:bg-yellow-300 text-black px-8 md:px-12 lg:px-16 py-4 md:py-5 lg:py-6 rounded-lg font-bold text-lg md:text-xl lg:text-2xl transition-all hover:scale-105 shadow-lg"
+            >
+              REGISTER NOW
+            </button>
+          </div>
 
           {/* Scroll indicator arrow below button */}
-          <div className="mt-4 md:mt-6 animate-bounce">
+          <div className="animate-bounce">
             <svg className="w-6 h-6 md:w-8 md:h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
             </svg>

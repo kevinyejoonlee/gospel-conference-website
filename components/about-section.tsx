@@ -12,12 +12,12 @@ export function AboutWithSpeakers() {
 
   return (
     <>
-      <section id="about" className="w-full py-16 md:py-24 bg-background">
-        <div className="max-w-4xl mx-auto px-4">
-          <div className="space-y-8">
+      <section id="about" className="w-full pt-20 md:pt-32 pb-16 md:pb-24 bg-background">
+        <div className="max-w-4xl mx-auto px-4 md:px-6">
+          <div className="space-y-10 md:space-y-12">
             <div className="text-center space-y-4">
               <h2 className="text-4xl md:text-5xl font-bold text-foreground">About the Conference</h2>
-              <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+              <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto">
                 Join us for an inspiring time of worship, teaching, and fellowship.
               </p>
             </div>

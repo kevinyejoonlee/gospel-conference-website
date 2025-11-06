@@ -3,8 +3,8 @@
 export function SpeakersSection() {
   return (
     <section id="speakers" className="w-full py-16 md:py-24" style={{ background: "linear-gradient(to bottom, #7a1e1e, #8b2a2a, #a83a2a)" }}>
-      <div className="max-w-6xl mx-auto px-4">
-        <div className="space-y-16">
+      <div className="max-w-6xl mx-auto px-4 md:px-6">
+        <div className="space-y-16 md:space-y-20">
           {/* Main Speaker */}
           <div className="text-center space-y-8">
             <h2 className="text-4xl md:text-5xl font-bold text-white tracking-wide">MAIN SPEAKER</h2>
