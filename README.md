@@ -115,3 +115,5 @@ To learn more about the technologies used:
 - [shadcn/ui Components](https://ui.shadcn.com)
 - [Stripe Documentation](https://stripe.com/docs)
 - [Cloudflare Pages Documentation](https://developers.cloudflare.com/pages/)
+
+

@@ -1,17 +1,21 @@
 import { Header } from "@/components/header"
 import { Hero } from "@/components/hero"
-import { AboutWithSpeakers } from "@/components/about-section"
+import { IntroSection } from "@/components/intro-section"
+import { SpeakersSection } from "@/components/speakers-section"
 import { RegistrationSection } from "@/components/registration-section"
+import { Footer } from "@/components/footer"
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background relative">
       <Header />
-      <main>
+      <main className="relative z-10">
         <Hero />
-        <AboutWithSpeakers />
+        <IntroSection />
+        <SpeakersSection />
         <RegistrationSection />
       </main>
+      <Footer />
     </div>
   )
 }
