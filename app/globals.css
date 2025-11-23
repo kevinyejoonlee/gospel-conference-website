@@ -174,3 +174,10 @@
 .font-inter {
   font-family: var(--font-inter), "Inter", sans-serif;
 }
+
+/* TT Hooves font - will use local font file if available, fallback to similar display font */
+.font-tt-hooves {
+  font-family: "TT Hoves", "TT Hoves Pro", "Arial Narrow", "Helvetica Neue Condensed", sans-serif;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+}

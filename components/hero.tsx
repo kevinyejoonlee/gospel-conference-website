@@ -16,7 +16,7 @@ export function Hero() {
           src="/images/home/hero-background-texture.png"
           alt="Hero background"
           fill
-          className="object-cover"
+          className="object-cover object-center"
           priority
           quality={90}
           sizes="100vw"
@@ -46,8 +46,8 @@ export function Hero() {
           {/* Main Title - CHRIST THE TRUE AND BETTER */}
           <div className="flex flex-col items-center">
             <h1 className="text-4xl md:text-5xl lg:text-[55.2px] font-league-spartan font-black leading-tight tracking-tight mb-4 md:mb-6">
-              <span className="text-[#FFFFFF] drop-shadow-[0_2px_8px_rgba(0,0,0,0.5)]">CHRIST</span>{" "}
-              <span className="text-[#6E97FF] drop-shadow-[0_2px_8px_rgba(0,0,0,0.5)]">THE TRUE AND BETTER</span>
+              <span className="text-[#FFFFFF] drop-shadow-[0_4px_20px_rgba(0,0,0,0.8),0_2px_10px_rgba(0,0,0,0.6),0_0_40px_rgba(0,0,0,0.4)]">CHRIST</span>{" "}
+              <span className="text-[#6E97FF] drop-shadow-[0_4px_20px_rgba(0,0,0,0.8),0_2px_10px_rgba(0,0,0,0.6),0_0_40px_rgba(0,0,0,0.4)]">THE TRUE AND BETTER</span>
             </h1>
 
             {/* Subtitle */}
