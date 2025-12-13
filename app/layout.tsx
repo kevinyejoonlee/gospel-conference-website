@@ -22,7 +22,9 @@ export const metadata: Metadata = {
   title: "Gospel Conference 2026 - Christ The True and Better",
   description:
     "Join us for Gospel Conference 2026: Christ The True and Better. March 18-20 in East Gwillimbury, Ontario.",
-  generator: "v0.app",
+    icons: {
+      icon: '/websitelogo.svg',  
+    },
 }
 
 export default function RootLayout({

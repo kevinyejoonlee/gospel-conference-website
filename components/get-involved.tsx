@@ -40,12 +40,7 @@ export default function GetInvolved() {
         <div className="absolute inset-0 bg-black/50"></div>
       </div>
 
-      {/* Bottom Left Logo */}
-      <div className="absolute bottom-4 left-4 md:bottom-6 md:left-6 z-20">
-        <div className="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 rounded-full bg-black/70 flex items-center justify-center">
-          <span className="text-white font-bold text-lg sm:text-xl md:text-2xl" style={{ fontFamily: 'var(--font-dm-sans-font)' }}>N</span>
-        </div>
-      </div>
+   
 
       <div className={`relative z-10 max-w-7xl mx-auto w-full px-4 sm:px-6 md:px-8 lg:px-16 ${isVisible ? 'animate-fade-in-up' : 'opacity-0'}`}>
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_2fr] gap-6 sm:gap-8 lg:gap-12 items-center">

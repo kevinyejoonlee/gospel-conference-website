@@ -327,14 +327,14 @@ export function PhotoGallery() {
   return (
     <div 
       ref={containerRef}
-      className="w-full h-[70vh] md:h-screen bg-black relative overflow-hidden"
+      className="w-full h-[40vh] md:h-screen bg-black relative overflow-hidden"
       onWheel={handleWheel}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
       onMouseUp={handleMouseUp}
     >
       <div className="absolute inset-0 flex items-center justify-center z-10 pointer-events-none">
-        <h2 className="text-white text-4xl md:text-6xl font-bold uppercase tracking-wider">
+        <h2 className="text-white text-3xl md:text-6xl font-bold uppercase tracking-wider">
           Photo Gallery
         </h2>
       </div>
@@ -365,7 +365,7 @@ export function PhotoGallery() {
           {duplicatedPhotos.map((photo, index) => (
             <div
               key={`${photo}-${index}`}
-              className="shrink-0 relative w-full md:w-[calc(33.333vw-1rem)] h-[50vh] md:h-[80vh] min-h-[50vh] md:min-h-[80vh]"
+              className="shrink-0 relative w-full md:w-[calc(33.333vw-1rem)] h-[30vh] md:h-[80vh] min-h-[30vh] md:min-h-[80vh]"
               style={{
                 transform: 'translate3d(0, 0, 0)',
                 backfaceVisibility: 'hidden',
