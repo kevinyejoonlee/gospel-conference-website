@@ -38,20 +38,20 @@ export default function Sessions() {
         <div className="lg:col-span-2 bg-[#fffcf3] flex items-center">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-0 relative w-full">
             {/* Main Sessions - left column */}
-            <div className="pr-4 sm:pr-6 md:pr-8 pl-6 sm:pl-8 md:pl-10 lg:pl-16 pt-8 sm:pt-10 md:pt-10 lg:pt-12 pb-8 sm:pb-10 md:pb-10 lg:pb-20 relative">
-              <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-[#A0302A] mb-6 sm:mb-8 md:mb-10" style={{ fontFamily: 'var(--font-dm-sans-font), sans-serif' }}>
+            <div className="pr-4 sm:pr-6 md:pr-8 pl-6 sm:pl-8 md:pl-10 lg:pl-16 pt-8 sm:pt-10 md:pt-10 lg:pt-12 pb-8 sm:pb-10 md:pb-10 lg:pb-20 relative flex flex-col items-center lg:items-start">
+              <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-[#A0302A] mb-6 sm:mb-8 md:mb-10 text-center lg:text-left w-full" style={{ fontFamily: 'var(--font-dm-sans-font), sans-serif' }}>
                 2026 Main Sessions
               </h2>
-              {/* Short black line - only where content is */}
+              {/* Short black line - only on desktop */}
               <div className="absolute right-0 top-8 sm:top-10 md:top-10 lg:top-12 bottom-8 sm:bottom-10 md:bottom-10 lg:bottom-20 w-px bg-black hidden lg:block"></div>
-              <ol className="space-y-4 sm:space-y-5 md:space-y-6 pl-0" style={{ fontFamily: 'var(--font-hk-grotesk)' }}>
+              <ol className="space-y-4 sm:space-y-5 md:space-y-6 pl-0 w-full max-w-md lg:max-w-none mx-auto lg:mx-0" style={{ fontFamily: 'var(--font-hk-grotesk)' }}>
                 {[
                   { name: "Adam", desc: "Bible passage TBD" },
                   { name: "Moses", desc: "Bible passage TBD" },
                   { name: "Isaiah", desc: "Bible passage TBD" },
                   { name: "David", desc: "Bible passage TBD" },
                 ].map((session, i) => (
-                  <li key={i} className="flex gap-2 sm:gap-3">
+                  <li key={i} className="flex gap-2 sm:gap-3 justify-start">
                     <span className="font-bold text-black text-lg sm:text-xl flex-shrink-0">{i + 1}.</span>
                     <div>
                       <p className="font-bold text-black text-base sm:text-lg md:text-xl leading-tight">
@@ -65,13 +65,13 @@ export default function Sessions() {
             </div>
 
             {/* Seminars - middle column */}
-            <div className="px-4 sm:px-6 md:px-8 pt-8 sm:pt-10 md:pt-10 lg:pt-12 pb-8 sm:pb-10 md:pb-10 lg:pb-20 lg:border-0">
-              <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-[#2A6A9B] mb-6 sm:mb-8 md:mb-10" style={{ fontFamily: 'var(--font-dm-sans-font), sans-serif' }}>
+            <div className="px-4 sm:px-6 md:px-8 pt-8 sm:pt-10 md:pt-10 lg:pt-12 pb-8 sm:pb-10 md:pb-10 lg:pb-20 lg:border-0 flex flex-col items-center lg:items-start">
+              <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-[#2A6A9B] mb-6 sm:mb-8 md:mb-10 text-center lg:text-left w-full" style={{ fontFamily: 'var(--font-dm-sans-font), sans-serif' }}>
                 2026 Seminars
               </h2>
-              <ol className="space-y-4 sm:space-y-5 md:space-y-6 pl-0" style={{ fontFamily: 'var(--font-hk-grotesk)' }}>
+              <ol className="space-y-4 sm:space-y-5 md:space-y-6 pl-0 w-full max-w-md lg:max-w-none mx-auto lg:mx-0" style={{ fontFamily: 'var(--font-hk-grotesk)' }}>
                 {[1, 2].map((_, i) => (
-                  <li key={i} className="flex gap-2 sm:gap-3">
+                  <li key={i} className="flex gap-2 sm:gap-3 justify-start">
                     <span className="font-bold text-black text-lg sm:text-xl flex-shrink-0">{i + 1}.</span>
                     <div>
                       <p className="font-bold text-black text-base sm:text-lg md:text-xl leading-tight">TBD</p>
