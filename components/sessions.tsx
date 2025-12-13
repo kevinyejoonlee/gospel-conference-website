@@ -89,14 +89,11 @@ export default function Sessions() {
           className="lg:col-span-1 bg-[#A0302A] p-6 sm:p-8 md:p-10 lg:p-12 flex flex-col items-center justify-center min-h-[400px] sm:min-h-[400px] md:min-h-[350px] lg:h-full relative overflow-hidden"
           style={{
             backgroundImage: "url(/read-more-bg.svg)",
-            backgroundSize: "cover",
+            backgroundSize: "105vw 100vh",
             backgroundPosition: "center",
           }}
         >
-          {/* Shadow overlays on the dark red background - same as video section */}
-          <div className="pointer-events-none absolute inset-x-0 top-0 h-16 bg-gradient-to-b from-black/15 via-black/5 to-transparent" />
-          <div className="pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-black/15 via-black/5 to-transparent" />
-          
+         
           <Link href="/about" className="flex flex-col items-center justify-center text-center relative z-10 w-full px-4 lg:px-6 max-w-full my-auto group cursor-pointer">
             <div className="space-y-1 mb-2 sm:mb-0.5">
               <p className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-[#7BC8FF] tracking-wide uppercase leading-tight break-words group-hover:text-blue-300 transition-colors duration-300">
