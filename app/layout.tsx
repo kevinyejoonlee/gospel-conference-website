@@ -1,41 +1,44 @@
-import type { Metadata } from "next";
-import { Geist, Geist_Mono, Space_Grotesk } from "next/font/google";
-import "./globals.css";
+import type React from "react"
+// <CHANGE> Updated metadata for Gospel Conference website
+import type { Metadata } from "next"
+import { Geist, Geist_Mono, League_Spartan, DM_Sans } from "next/font/google"
+import { Analytics } from "@vercel/analytics/next"
+import "./globals.css"
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const _geist = Geist({ subsets: ["latin"] })
+const _geistMono = Geist_Mono({ subsets: ["latin"] })
+const _spartan = League_Spartan({
   subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+  weight: ["400", "600", "700", "800"],
+  variable: "--font-spartan-font",
+})
+const _dmSans = DM_Sans({
   subsets: ["latin"],
-});
-
-const spaceGrotesk = Space_Grotesk({
-  variable: "--font-space-grotesk",
-  subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700"],
-});
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-dm-sans-font",
+})
 
 export const metadata: Metadata = {
-  title: "Gospel Conference 2025",
-  description: "Join us for the Gospel Conference 2025 - March 18-20, 2025",
-};
+  title: "Gospel Conference 2026 - Christ The True and Better",
+  description:
+    "Join us for Gospel Conference 2026: Christ The True and Better. March 18-20 in East Gwillimbury, Ontario.",
+  generator: "v0.app",
+}
 
 export default function RootLayout({
   children,
 }: Readonly<{
-  children: React.ReactNode;
+  children: React.ReactNode
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" className="bg-black">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} ${spaceGrotesk.variable} antialiased`}
+        className={`${_geist.className} ${_spartan.variable} ${_dmSans.variable} font-sans antialiased bg-black`}
         suppressHydrationWarning
       >
         {children}
+        <Analytics />
       </body>
     </html>
-  );
+  )
 }

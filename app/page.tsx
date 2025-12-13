@@ -1,25 +1,23 @@
-import { Header } from "@/components/header"
-import { Hero } from "@/components/hero"
-import { IntroSection } from "@/components/intro-section"
-import { EventDetailsSection } from "@/components/event-details-section"
-import { AboutThemeSection } from "@/components/about-theme-section"
-import { SpeakersSection } from "@/components/speakers-section"
-import { RegistrationSection } from "@/components/registration-section"
-import { Footer } from "@/components/footer"
+import Navbar from "@/components/navbar"
+import Hero from "@/components/hero"
+import Video from "@/components/video"
+import Sessions from "@/components/sessions"
+import Speakers from "@/components/speakers"
+import GetInvolved from "@/components/get-involved"
+import Sing from "@/components/sing"
+import Footer from "@/components/footer"
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-background relative">
-      <Header />
-      <main className="relative z-10">
-        <Hero />
-        <IntroSection />
-        <EventDetailsSection />
-        <AboutThemeSection />
-        <SpeakersSection />
-        <RegistrationSection />
-      </main>
+    <main className="min-h-screen">
+      <Navbar />
+      <Hero />
+      <Video />
+      <Speakers />
+      <Sessions />
+      <GetInvolved />
+      <Sing />
       <Footer />
-    </div>
+    </main>
   )
 }
