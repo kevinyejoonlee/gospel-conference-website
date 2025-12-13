@@ -18,10 +18,14 @@ export function Navbar() {
     >
       <div className="max-w-7xl mx-auto py-3 px-4 md:px-6">
         <div className="flex justify-between items-center">
-          <Link href="/" className="h-8 w-auto">
-            <img src="/logo-navbar.svg" alt="Gospel Conference Logo" className="h-full w-auto" />
+        <Link href="/" className="flex items-center">
+            <img 
+              src="/logo-navbar.svg" 
+              alt="Gospel Conference Logo" 
+              className="h-7 sm:h-8 md:h-9 w-auto" 
+              style={{ imageRendering: 'crisp-edges' }}
+            />
           </Link>
-
           {/* Desktop Menu */}
           <ul
             className={`hidden md:flex gap-8 text-sm font-medium items-center ${

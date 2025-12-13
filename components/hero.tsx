@@ -31,7 +31,7 @@ export default function Hero() {
             {/* Complete Hero Content - Logo, Title, Details, and Button together */}
             <div className={`hero-all-content ${isLoaded ? 'animate-fade-in-up' : 'hero-hidden'}`}>
               {/* Conference Year with Logo */}
-              <div className="mb-8 sm:mb-10 md:mb-16" style={{ marginTop: '23%' }}>
+              <div className="mb-8 sm:mb-10 md:mb-16" style={{ marginTop: '21%' }}>
                 <p className="text-xs sm:text-sm md:text-base text-white mb-0 tracking-wider flex items-center justify-center gap-2">
                   <img src="/logo-hero.svg" alt="Gospel Conference Logo" className="h-5 sm:h-6 md:h-9 w-auto" />
               </p>
@@ -45,7 +45,7 @@ export default function Hero() {
                   fontSize: 'clamp(1.75rem, 6vw, 5rem)',
               }}
             >
-              CHRIST <span className="text-blue-400">THE TRUE AND BETTER</span>
+              CHRIST <span className="text-blue-400">THE <br className="md:hidden" />TRUE AND BETTER</span>
             </h1>
 
             {/* Event Details */}
