@@ -57,6 +57,7 @@ export function PhotoGallery() {
   const [speedMultiplier, setSpeedMultiplier] = useState(1)
   const [isDragging, setIsDragging] = useState(false)
   const [isReady, setIsReady] = useState(false)
+  const [isMobile, setIsMobile] = useState(false)
   const dragStartXRef = useRef(0)
   const dragStartPositionRef = useRef(0)
   const lastMouseXRef = useRef(0)
@@ -65,18 +66,29 @@ export function PhotoGallery() {
   const totalPhotoWidthRef = useRef(0)
   const maxPositionRef = useRef(0)
   const baseSpeed = 0.3 // Base scroll speed in pixels per frame
+  
   const getGap = useCallback(() => {
     if (typeof window === 'undefined') return 16
-    return window.innerWidth < 768 ? 12 : 16 // 12px gap on mobile, 16px gap on desktop
+    return window.innerWidth < 768 ? 16 : 16 // 16px gap for both
   }, [])
 
-  // Duplicate photos for seamless infinite scroll
-  const duplicatedPhotos = [...photos, ...photos, ...photos]
+  // Duplicate photos for seamless infinite scroll - fewer on mobile to save memory
+  const duplicatedPhotos = isMobile ? [...photos, ...photos] : [...photos, ...photos, ...photos]
 
   // Show 1 image on mobile (100% width), 3 images on desktop (33.333% width)
   const getPhotoWidth = useCallback(() => {
     if (typeof window === 'undefined') return 33.333
     return window.innerWidth < 768 ? 100 : 33.333 // md breakpoint is 768px
+  }, [])
+
+  // Detect mobile on mount
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768)
+    }
+    checkMobile()
+    window.addEventListener('resize', checkMobile)
+    return () => window.removeEventListener('resize', checkMobile)
   }, [])
 
   // Cache width calculations
@@ -106,7 +118,7 @@ export function PhotoGallery() {
     // Delay to ensure container has dimensions, especially on mobile
     const timer = setTimeout(() => {
       updateWidthCache()
-    }, 0)
+    }, 100)
     
     const handleResize = () => {
       updateWidthCache()
@@ -192,14 +204,12 @@ export function PhotoGallery() {
     dragStartXRef.current = e.touches[0].clientX
     dragStartPositionRef.current = positionRef.current
     lastMouseXRef.current = e.touches[0].clientX
-    // Don't call preventDefault here - let CSS touch-action handle it
   }, [])
 
   const handleTouchMove = useCallback((e: React.TouchEvent<HTMLDivElement>) => {
     if (isDragging && scrollRef.current) {
       const deltaX = e.touches[0].clientX - dragStartXRef.current
       updateDragPosition(deltaX)
-      // Don't call preventDefault here - handled by global listener
     }
   }, [isDragging, updateDragPosition])
 
@@ -222,8 +232,8 @@ export function PhotoGallery() {
     if (isDragging && scrollRef.current) {
       const deltaX = e.clientX - dragStartXRef.current
       updateDragPosition(deltaX)
-    } else if (!isDragging && containerRef.current) {
-      // Speed control based on mouse position (only when not dragging)
+    } else if (!isDragging && containerRef.current && !isMobile) {
+      // Speed control based on mouse position (only when not dragging and not on mobile)
       const rect = containerRef.current.getBoundingClientRect()
       const mouseX = e.clientX - rect.left
       const containerWidth = rect.width
@@ -233,7 +243,7 @@ export function PhotoGallery() {
       const newMultiplier = 0.2 + (normalizedX * 2.8)
       updateSpeedMultiplier(Math.max(0.2, Math.min(3, newMultiplier)))
     }
-  }, [isDragging, updateDragPosition, updateSpeedMultiplier])
+  }, [isDragging, updateDragPosition, updateSpeedMultiplier, isMobile])
 
   const handleMouseUp = useCallback(() => {
     setIsDragging(false)
@@ -241,13 +251,12 @@ export function PhotoGallery() {
 
   // Mouse wheel handler for speed control
   const handleWheel = useCallback((e: React.WheelEvent<HTMLDivElement>) => {
-    if (!isDragging) {
-      // Don't call preventDefault - allow natural scrolling, just adjust speed
+    if (!isDragging && !isMobile) {
       const delta = e.deltaY
       const newMultiplier = Math.max(0.1, Math.min(5, speedMultiplier + (delta > 0 ? 0.1 : -0.1)))
       setSpeedMultiplier(newMultiplier)
     }
-  }, [speedMultiplier, isDragging])
+  }, [speedMultiplier, isDragging, isMobile])
 
   // Reset speed when mouse leaves
   const handleMouseLeave = useCallback(() => {
@@ -262,7 +271,6 @@ export function PhotoGallery() {
     const handleGlobalMouseMove = (e: MouseEvent) => {
       if (isDragging) {
         const deltaX = e.clientX - dragStartXRef.current
-        // Use RAF for smooth drag updates
         if (dragAnimationFrameRef.current) {
           cancelAnimationFrame(dragAnimationFrameRef.current)
         }
@@ -275,14 +283,12 @@ export function PhotoGallery() {
     const handleGlobalTouchMove = (e: TouchEvent) => {
       if (isDragging && e.touches.length > 0) {
         const deltaX = e.touches[0].clientX - dragStartXRef.current
-        // Use RAF for smooth drag updates
         if (dragAnimationFrameRef.current) {
           cancelAnimationFrame(dragAnimationFrameRef.current)
         }
         dragAnimationFrameRef.current = requestAnimationFrame(() => {
           updateDragPosition(deltaX)
         })
-        // Don't call preventDefault - CSS touch-action handles it
       }
     }
 
@@ -305,7 +311,7 @@ export function PhotoGallery() {
     if (isDragging) {
       window.addEventListener('mousemove', handleGlobalMouseMove, { passive: true })
       window.addEventListener('mouseup', handleGlobalMouseUp)
-      window.addEventListener('touchmove', handleGlobalTouchMove, { passive: false })
+      window.addEventListener('touchmove', handleGlobalTouchMove, { passive: true })
       window.addEventListener('touchend', handleGlobalTouchEnd)
     }
 
@@ -348,27 +354,30 @@ export function PhotoGallery() {
         style={{
           transform: 'translate3d(0, 0, 0)',
           willChange: 'contents',
-          touchAction: 'none', // Prevent default touch behaviors for carousel dragging
+          WebkitOverflowScrolling: 'touch',
         }}
       >
         <div
           ref={scrollRef}
-          className="flex items-center gap-3 md:gap-4 select-none relative z-0"
+          className="flex items-center gap-4 select-none relative z-0"
           style={{
             willChange: 'transform',
             transform: 'translate3d(0, 0, 0)',
             backfaceVisibility: 'hidden',
-            perspective: '1000px',
-            minWidth: '100%', // Ensure container has width on mobile
+            WebkitBackfaceVisibility: 'hidden',
           }}
         >
           {duplicatedPhotos.map((photo, index) => (
             <div
               key={`${photo}-${index}`}
-              className="shrink-0 relative w-full md:w-[calc(33.333vw-1rem)] h-[30vh] md:h-[80vh] min-h-[30vh] md:min-h-[80vh]"
+              className="shrink-0 relative"
               style={{
+                width: isMobile ? '100vw' : 'calc(33.333vw - 1rem)',
+                height: isMobile ? '30vh' : '80vh',
+                minHeight: isMobile ? '30vh' : '80vh',
                 transform: 'translate3d(0, 0, 0)',
                 backfaceVisibility: 'hidden',
+                WebkitBackfaceVisibility: 'hidden',
               }}
             >
               <Image
@@ -377,9 +386,10 @@ export function PhotoGallery() {
                 fill
                 className="object-cover rounded-lg"
                 sizes="(max-width: 768px) 100vw, 33vw"
-                loading={index < 9 ? 'eager' : 'lazy'}
-                priority={index < 3}
-                unoptimized
+                loading={isMobile ? (index < 3 ? 'eager' : 'lazy') : (index < 9 ? 'eager' : 'lazy')}
+                priority={index < 1}
+                quality={isMobile ? 75 : 90}
+                draggable={false}
               />
             </div>
           ))}
@@ -388,4 +398,3 @@ export function PhotoGallery() {
     </div>
   )
 }
-
