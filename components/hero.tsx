@@ -42,7 +42,7 @@ export default function Hero() {
                 className="font-spartan font-bold mb-0 w-[90vw] sm:w-[85vw] md:w-[80vw] leading-tight mx-auto px-2 text-center"
               style={{ 
                 textShadow: '0 6px 16px rgba(0, 0, 0, 0.7)',
-                  fontSize: 'clamp(1.75rem, 6vw, 5rem)',
+                  fontSize: 'clamp(2.4rem, 6vw, 5rem)',
               }}
             >
               CHRIST <span className="text-blue-400">THE <br className="md:hidden" />TRUE AND BETTER</span>
