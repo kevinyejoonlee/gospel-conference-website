@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useRef, useState, useCallback, useLayoutEffect } from 'react'
+import { useEffect, useRef, useState, useCallback, useLayoutEffect, useMemo } from 'react'
 import Image from 'next/image'
 
 const photos = [
@@ -57,7 +57,11 @@ export function PhotoGallery() {
   const [speedMultiplier, setSpeedMultiplier] = useState(1)
   const [isDragging, setIsDragging] = useState(false)
   const [isReady, setIsReady] = useState(false)
-  const [isMobile, setIsMobile] = useState(false)
+  const [isMobile, setIsMobile] = useState(() => {
+    // Initialize mobile state correctly to prevent render mismatch
+    if (typeof window === 'undefined') return false
+    return window.innerWidth < 768
+  })
   const dragStartXRef = useRef(0)
   const dragStartPositionRef = useRef(0)
   const lastMouseXRef = useRef(0)
@@ -73,7 +77,10 @@ export function PhotoGallery() {
   }, [])
 
   // Duplicate photos for seamless infinite scroll - fewer on mobile to save memory
-  const duplicatedPhotos = isMobile ? [...photos, ...photos] : [...photos, ...photos, ...photos]
+  // Use useMemo to prevent recalculation on every render
+  const duplicatedPhotos = useMemo(() => {
+    return isMobile ? [...photos, ...photos] : [...photos, ...photos, ...photos]
+  }, [isMobile])
 
   // Show 1 image on mobile (100% width), 3 images on desktop (33.333% width)
   const getPhotoWidth = useCallback(() => {
@@ -81,14 +88,20 @@ export function PhotoGallery() {
     return window.innerWidth < 768 ? 100 : 33.333 // md breakpoint is 768px
   }, [])
 
-  // Detect mobile on mount
+  // Detect mobile on mount and resize
   useEffect(() => {
     const checkMobile = () => {
       setIsMobile(window.innerWidth < 768)
     }
+    // Check immediately
     checkMobile()
+    // Also check after a short delay to catch any layout shifts on mobile
+    const timeoutId = setTimeout(checkMobile, 150)
     window.addEventListener('resize', checkMobile)
-    return () => window.removeEventListener('resize', checkMobile)
+    return () => {
+      clearTimeout(timeoutId)
+      window.removeEventListener('resize', checkMobile)
+    }
   }, [])
 
   // Cache width calculations
@@ -116,9 +129,19 @@ export function PhotoGallery() {
   // Update width cache on mount and resize
   useLayoutEffect(() => {
     // Delay to ensure container has dimensions, especially on mobile
-    const timer = setTimeout(() => {
-      updateWidthCache()
-    }, 100)
+    // Use requestAnimationFrame for better timing
+    let frameId: number
+    const updateAfterFrame = () => {
+      frameId = requestAnimationFrame(() => {
+        updateWidthCache()
+        // Also check on next frame for mobile devices that might be slower
+        frameId = requestAnimationFrame(() => {
+          updateWidthCache()
+        })
+      })
+    }
+    
+    updateAfterFrame()
     
     const handleResize = () => {
       updateWidthCache()
@@ -131,7 +154,7 @@ export function PhotoGallery() {
     
     window.addEventListener('resize', handleResize)
     return () => {
-      clearTimeout(timer)
+      if (frameId) cancelAnimationFrame(frameId)
       window.removeEventListener('resize', handleResize)
     }
   }, [updateWidthCache])
@@ -173,7 +196,7 @@ export function PhotoGallery() {
 
   // Update position during drag using RAF for smoothness
   const updateDragPosition = useCallback((deltaX: number) => {
-    if (!scrollRef.current) return
+    if (!scrollRef.current || maxPositionRef.current <= 0) return
     
     const newPosition = dragStartPositionRef.current - deltaX
     

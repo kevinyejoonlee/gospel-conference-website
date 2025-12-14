@@ -28,9 +28,21 @@ export default function Video() {
   const preloadPlayerRef = useRef<any>(null)
   const countdownIntervalRef = useRef<NodeJS.Timeout | null>(null)
   const hasUserClickedPlay = useRef<boolean>(false)
+  const isMobileRef = useRef<boolean>(false)
 
   // YouTube video ID
   const youtubeVideoId = "Obu6rr8MYH8"
+
+  // Detect mobile device
+  useEffect(() => {
+    const checkMobile = () => {
+      isMobileRef.current = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent) || 
+                           (typeof window !== 'undefined' && window.innerWidth < 768)
+    }
+    checkMobile()
+    window.addEventListener('resize', checkMobile)
+    return () => window.removeEventListener('resize', checkMobile)
+  }, [])
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -273,8 +285,13 @@ export default function Video() {
                       setIsBuffering(false)
                       setCountdown(0)
                       
-                      // Request fullscreen right before playing
+                      // Request fullscreen right before playing (skip on mobile - fullscreen requires user gesture)
                       const requestFullscreen = () => {
+                        // Skip fullscreen on mobile devices
+                        if (isMobileRef.current) {
+                          return
+                        }
+                        
                         const playerElement = document.getElementById('youtube-player')
                         if (playerElement) {
                           // Try YouTube Player API fullscreen first (if available)
@@ -338,10 +355,11 @@ export default function Video() {
                         }
                       }
                       
-                      // Request fullscreen immediately, then play right after
+                      // Request fullscreen immediately, then play right after (skipped on mobile)
                       requestFullscreen()
                       
                       // Play video immediately after fullscreen request (browser will handle the timing)
+                      // On mobile, video will play inline
                       hasUserClickedPlay.current = true
                       event.target.playVideo()
                     } catch (e) {
