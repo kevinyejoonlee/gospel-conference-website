@@ -233,7 +233,8 @@ function VolunteerForm() {
 
                   <div>
                     <label className="block text-white text-xs sm:text-sm mb-1 font-[var(--font-dm-sans-font)]">
-                      Do you agree to the requirements on the lefthand side of all volunteers? <span className="text-red-400">*</span>
+                      <span className="md:hidden">Do you agree to the volunteer requirements above? <span className="text-red-400">*</span></span>
+                      <span className="hidden md:inline">Do you agree to the requirements on the lefthand side of all volunteers? <span className="text-red-400">*</span></span>
                     </label>
                     <textarea
                       name="agreement"

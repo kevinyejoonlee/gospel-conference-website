@@ -28,7 +28,7 @@ export default function Sessions() {
   }, [])
 
   return (
-    <section ref={sectionRef} className="relative overflow-hidden bg-[#fffcf3] min-h-auto lg:h-[75vh]" id="about">
+    <section ref={sectionRef} className="relative overflow-hidden bg-[#fffcf3] min-h-auto lg:h-[75vh] lg:pl-30 xl:pl-30" id="about">
       {/* Top and bottom gradient shadow overlays - same as video section */}
       <div className="pointer-events-none absolute inset-x-0 top-0 h-16 bg-gradient-to-b from-black/15 via-black/5 to-transparent z-10" />
       <div className="pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-black/15 via-black/5 to-transparent z-10" />
@@ -38,7 +38,7 @@ export default function Sessions() {
         <div className="lg:col-span-2 bg-[#fffcf3] flex items-center">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-0 relative w-full">
             {/* Main Sessions - left column */}
-            <div className="pr-4 sm:pr-6 md:pr-8 pl-6 sm:pl-8 md:pl-10 lg:pl-16 pt-8 sm:pt-10 md:pt-10 lg:pt-12 pb-8 sm:pb-10 md:pb-10 lg:pb-20 relative flex flex-col items-center lg:items-start">
+            <div className="px-4 md:px-6 pt-8 sm:pt-10 md:pt-10 lg:pt-12 pb-8 sm:pb-10 md:pb-10 lg:pb-20 relative flex flex-col items-center lg:items-start">
               <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-[#A0302A] mb-6 sm:mb-8 md:mb-10 text-center lg:text-left w-full" style={{ fontFamily: 'var(--font-dm-sans-font), sans-serif' }}>
                 2026 Main Sessions
               </h2>
