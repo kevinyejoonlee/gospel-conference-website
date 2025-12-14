@@ -31,7 +31,7 @@ export default function Hero() {
             {/* Complete Hero Content - Logo, Title, Details, and Button together */}
             <div className={`hero-all-content ${isLoaded ? 'animate-fade-in-up' : 'hero-hidden'}`}>
               {/* Conference Year with Logo */}
-              <div className="mb-8 sm:mb-10 md:mb-16 mt-[22%] md:mt-[2%]">
+              <div className="mb-8 sm:mb-10 md:mb-16 mt-[20%] md:mt-[2%]">
                 <p className="text-xs sm:text-sm md:text-base text-white mb-0 tracking-wider flex items-center justify-center gap-2">
                   <img src="/logo-hero.svg" alt="Gospel Conference Logo" className="h-5 sm:h-6 md:h-9 w-auto" />
               </p>
