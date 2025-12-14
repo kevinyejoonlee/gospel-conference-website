@@ -75,7 +75,7 @@ export default function Hero() {
           <div className="absolute inset-0 bg-black/40"></div>
         </div>
         <p 
-            className={`font-dm-sans relative z-10 font-bold leading-relaxed w-[85vw] sm:w-[80vw] md:w-[82vw] text-left md:text-center mx-auto px-6 sm:px-8 md:px-0 ${isLoaded ? 'animate-fade-in-up' : 'hero-hidden'}`}
+            className={`font-dm-sans relative z-10 font-bold leading-relaxed md:w-[82vw] text-left md:text-center mx-auto px-6 sm:px-8 md:px-0 ${isLoaded ? 'animate-fade-in-up' : 'hero-hidden'}`}
             style={{
               textShadow: '0 6px 16px rgba(0, 0, 0, 0.7)',
               fontSize: 'clamp(1.125rem, 2.07vw, 2rem)',
