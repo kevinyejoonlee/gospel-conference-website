@@ -453,7 +453,7 @@ export default function Video() {
     <>
       <section ref={sectionRef} className="relative overflow-hidden py-16 sm:py-20 md:py-24 px-4 sm:px-6 bg-[#fffcf3] min-h-auto lg:h-[75vh] flex items-center">
         {/* Top and bottom gradient shadow overlays */}
-        <div className="pointer-events-none absolute inset-x-0 top-0 h-16 bg-gradient-to-b from-black/15 via-black/5 to-transparent" />
+        <div className="hidden md:block pointer-events-none absolute inset-x-0 top-0 h-16 bg-gradient-to-b from-black/15 via-black/5 to-transparent" />
         <div className="pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-black/15 via-black/5 to-transparent" />
 
         <div className={`relative max-w-7xl mx-auto w-full ${isVisible ? 'animate-fade-in-up' : 'opacity-0'}`}>
