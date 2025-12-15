@@ -459,7 +459,7 @@ export default function Video() {
         <div className={`relative max-w-7xl mx-auto w-full ${isVisible ? 'animate-fade-in-up' : 'opacity-0'}`}>
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 sm:gap-14 md:gap-10 lg:gap-12 items-center">
             <div className="lg:col-span-1 flex flex-col items-center justify-center text-center gap-6 sm:gap-8 md:gap-6">
-              <p className="text-lg sm:text-xl md:text-2xl font-bold text-blue-500 leading-relaxed px-2 sm:px-4">
+              <p className="text-lg sm:text-2xl md:text-2xl font-bold text-blue-500 leading-relaxed sm:px-4">
                 Hear more about Gospel Conference, our hope, and student's testimonials.
               </p>
               <img

@@ -6,7 +6,6 @@ export default function Hero() {
   const [isLoaded, setIsLoaded] = useState(false)
 
   useEffect(() => {
-    // Use requestAnimationFrame for smoother start
     const frame = requestAnimationFrame(() => {
       setIsLoaded(true)
     })
@@ -14,54 +13,54 @@ export default function Hero() {
   }, [])
 
   return (
-      <section className="relative w-full overflow-hidden">
-        {/* Hero Section with Background */}
-        <div className="relative min-h-screen md:h-[78vh] bg-black">
-          <div
-            className="absolute inset-0 bg-center bg-no-repeat hero-bg-mobile md:hero-bg-desktop"
-            style={{
-              backgroundImage: "url(/hero-bg.svg)",
-              backgroundPosition: "center",
-              backgroundSize: "auto 165%",
-            }}
-          >
-            <div className="absolute inset-0 bg-linear-to-b from-black/40 via-black/30 to-black/50"></div>
-          </div>
-          <div className="relative z-10 min-h-screen md:h-[78vh] flex flex-col items-center justify-center text-center text-white px-4 sm:px-6 py-16 md:py-12">
-            {/* Complete Hero Content - Logo, Title, Details, and Button together */}
-            <div className={`hero-all-content ${isLoaded ? 'animate-fade-in-up' : 'hero-hidden'}`}>
-              {/* Conference Year with Logo */}
-              <div className="mb-8 sm:mb-10 md:mb-16 mt-[15%] md:mt-[2%]">
-                <p className="text-xs sm:text-sm md:text-base text-white mb-0 tracking-wider flex items-center justify-center gap-2">
-                  <img src="/logo-hero.svg" alt="Gospel Conference Logo" className="h-5 sm:h-6 md:h-9 w-auto" />
+    <section className="relative w-full overflow-hidden">
+      {/* Hero Section with Background */}
+      <div className="relative min-h-screen md:h-[78vh] bg-black">
+        <div
+          className="absolute inset-0 bg-center bg-no-repeat hero-bg-mobile md:hero-bg-desktop"
+          style={{
+            backgroundImage: "url(/hero-bg.svg)",
+            backgroundPosition: "center",
+            backgroundSize: "auto 165%",
+          }}
+        >
+          <div className="absolute inset-0 bg-linear-to-b from-black/40 via-black/30 to-black/50"></div>
+        </div>
+        <div className="relative z-10 min-h-screen md:h-[78vh] flex flex-col items-center justify-center text-center text-white">
+          <div className={`max-w-7xl mx-auto w-full px-4 md:px-6 hero-all-content ${isLoaded ? 'animate-fade-in-up' : 'hero-hidden'}`}>
+            {/* Conference Year with Logo */}
+            <div className="mb-8 sm:mb-10 md:mb-16 mt-[15%] md:mt-[2%]">
+              <p className="text-xs sm:text-sm md:text-base text-white mb-0 tracking-wider flex items-center justify-center gap-2">
+                <img src="/logo-hero.svg" alt="Gospel Conference Logo" className="h-5 sm:h-6 md:h-9 w-auto" />
               </p>
             </div>
 
-            {/* Main Title */}
+            {/* Main Title - Consistent max-width instead of vw */}
             <h1 
-                className="font-spartan font-bold mb-0 w-[90vw] sm:w-[85vw] md:w-[80vw] leading-tight mx-auto px-2 text-center"
+              className="font-spartan font-bold mb-0 max-w-4xl mx-auto leading-tight text-center"
               style={{ 
                 textShadow: '0 6px 16px rgba(0, 0, 0, 0.7)',
-                  fontSize: 'clamp(2.4rem, 6vw, 5rem)',
+                fontSize: 'clamp(2.4rem, 6vw, 5rem)',
               }}
             >
               CHRIST <span className="text-blue-400">THE <br className="md:hidden" />TRUE AND BETTER</span>
             </h1>
 
-            {/* Event Details */}
-              <p className="font-dm-sans text-sm sm:text-base md:text-[23px] mt-2 sm:-mt-3 md:-mt-2 mb-20 sm:mb-24 md:mb-20 text-white-200 px-4 sm:px-2 max-w-2xl mx-auto text-center">
+            {/* Event Details - Consistent max-width */}
+            <p className="font-dm-sans text-sm sm:text-base md:text-[23px] mt-2 sm:-mt-3 md:-mt-2 mb-20 sm:mb-24 md:mb-20 text-white-200 max-w-2xl mx-auto text-center">
               <b>March 18-20</b> | Grades 7-12 | East Gwillimbury, Ontario
             </p>
 
             {/* Register Button */}
             <Link
               href="/register"
-                className="font-dm-sans inline-block text-sm sm:text-base md:text-xl border-2 border-white bg-gray-800/50 text-white px-6 sm:px-5 md:px-7 py-2 sm:py-1 md:py-2 rounded-full font-bold transition duration-300 hover:bg-white hover:text-black hover:shadow-lg hover:-translate-y-[2px]"
+              className="font-dm-sans inline-block text-sm sm:text-base md:text-xl border-2 border-white bg-gray-800/50 text-white px-6 sm:px-5 md:px-7 py-2 sm:py-1 md:py-2 rounded-full font-bold transition duration-300 hover:bg-white hover:text-black hover:shadow-lg hover:-translate-y-[2px]"
             >
-              REGISTER JAN 1ST            </Link>
-            </div>
+              REGISTER JAN 1ST
+            </Link>
           </div>
         </div>
+      </div>
 
       {/* Mission Statement Section - with Background Image */}
       <div className="relative text-white h-[50vh] md:h-[30vh] flex items-center mission-section bg-black">
@@ -74,16 +73,17 @@ export default function Hero() {
         >
           <div className="absolute inset-0 bg-black/40"></div>
         </div>
-        <p 
-            className={`mission-statement font-dm-sans relative z-10 font-bold leading-relaxed md:w-[82vw] text-left md:text-center mx-auto px-6 sm:px-8 md:px-0 ${isLoaded ? 'animate-fade-in-up' : 'hero-hidden'}`}
+        <div className="max-w-7xl mx-auto w-full px-4 md:px-6 relative z-10">
+          <p 
+            className={`mission-statement font-dm-sans font-bold leading-relaxed max-w-4xl mx-auto text-center ${isLoaded ? 'animate-fade-in-up' : 'hero-hidden'}`}
             style={{
               textShadow: '0 6px 16px rgba(0, 0, 0, 0.7)',
               animationDelay: '0.3s'
             }}
-        >
-          Gospel Conference hopes to continue the legacy of preserving and preaching the one true gospel of Jesus Christ in the midst of the noise of our generation.
-        </p>
-
+          >
+            Gospel Conference hopes to continue the legacy of preserving and preaching the one true gospel of Jesus Christ in the midst of the noise of our generation.
+          </p>
+        </div>
       </div>
 
       <style jsx>{`
@@ -154,3 +154,4 @@ export default function Hero() {
     </section>
   )
 }
+
