@@ -32,26 +32,24 @@ export function Navbar() {
               isDonatePage ? "text-white" : isRegisterPage ? "text-black" : "text-white"
             }`}
           >
-            {!isHomePage && (
-              <li>
-                <Link
-                  href="/"
-                  className={`${
-                    isRegisterPage 
-                      ? "hover:text-gray-700 hover:border-b-2 hover:border-black hover:pb-1" 
-                      : "hover:text-blue-400 hover:border-b-2 hover:border-blue-400 hover:pb-1"
-                  } transition ${
-                    pathname === "/"
-                      ? isRegisterPage
-                        ? "border-b-2 border-black pb-1"
-                        : "border-b-2 border-white pb-1"
-                      : ""
-                  }`}
-                >
-                  HOME
-                </Link>
-              </li>
-            )}
+            <li>
+              <Link
+                href="/"
+                className={`${
+                  isRegisterPage 
+                    ? "hover:text-gray-700 hover:border-b-2 hover:border-black hover:pb-1" 
+                    : "hover:text-blue-400 hover:border-b-2 hover:border-blue-400 hover:pb-1"
+                } transition ${
+                  pathname === "/"
+                    ? isRegisterPage
+                      ? "border-b-2 border-black pb-1"
+                      : "border-b-2 border-white pb-1"
+                    : ""
+                }`}
+              >
+                HOME
+              </Link>
+            </li>
             <li>
               <Link
                 href="/about"
@@ -174,21 +172,19 @@ export function Navbar() {
           <ul
             className="flex flex-col gap-1 pb-4 text-sm font-medium rounded-lg bg-black/80 text-white shadow-xl backdrop-blur-md p-4"
           >
-            {!isHomePage && (
-              <li>
-                <Link
-                  href="/"
-                  onClick={() => setIsMenuOpen(false)}
-                  className={`block py-3 px-4 rounded-md hover:bg-opacity-20 transition-all duration-200 ${
-                    pathname === "/"
-                      ? "bg-white/20 text-white font-semibold"
-                      : "hover:bg-white/10"
-                  }`}
-                >
-                  HOME
-                </Link>
-              </li>
-            )}
+            <li>
+              <Link
+                href="/"
+                onClick={() => setIsMenuOpen(false)}
+                className={`block py-3 px-4 rounded-md hover:bg-opacity-20 transition-all duration-200 ${
+                  pathname === "/"
+                    ? "bg-white/20 text-white font-semibold"
+                    : "hover:bg-white/10"
+                }`}
+              >
+                HOME
+              </Link>
+            </li>
             <li>
               <Link
                 href="/about"
