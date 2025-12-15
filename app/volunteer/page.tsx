@@ -44,8 +44,7 @@ function VolunteerForm() {
               </p>
 
               <p className="text-[10px] sm:text-[11px] md:text-xs text-gray-600 mt-3 sm:mt-2.5 mb-6 lg:mb-0 leading-tight">
-                Due to limited space, application does not guarantee acceptance. However, we will be in contact with you if
-                in absence at the conference!
+                Due to limited space, application does not guarantee acceptance.
               </p>
             </div>
           </div>
