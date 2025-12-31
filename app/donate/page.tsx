@@ -3,6 +3,16 @@
 import { useState, useEffect, Suspense } from "react"
 import { Navbar } from "@/components/navbar"
 import { Footer } from "@/components/footer"
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog"
 
 function DonateForm() {
   const [selectedAmount, setSelectedAmount] = useState<string | null>(null)
@@ -15,6 +25,8 @@ function DonateForm() {
   const [copied, setCopied] = useState(false)
   const [totalRaised, setTotalRaised] = useState(0)
   const [isLoadingTotal, setIsLoadingTotal] = useState(true)
+  const [showConfirmDialog, setShowConfirmDialog] = useState(false)
+  const [pendingDonation, setPendingDonation] = useState<{amount: number, name: string, email: string} | null>(null)
 
   const goal = 3000
 
@@ -84,7 +96,16 @@ function DonateForm() {
       return
     }
 
+    // Store pending donation and show confirmation dialog
+    setPendingDonation({ amount, name: donorName, email: donorEmail })
+    setShowConfirmDialog(true)
+  }
+
+  const confirmDonation = async () => {
+    if (!pendingDonation) return
+
     setIsLoading(true)
+    setShowConfirmDialog(false)
 
     try {
       // Submit to Formspree to track the pledge
@@ -94,9 +115,9 @@ function DonateForm() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          donorName,
-          donorEmail,
-          donationAmount: amount,
+          donorName: pendingDonation.name,
+          donorEmail: pendingDonation.email,
+          donationAmount: pendingDonation.amount,
           type: 'donation-pledge',
           timestamp: new Date().toISOString(),
         }),
@@ -107,14 +128,18 @@ function DonateForm() {
       }
 
       // Show e-Transfer instructions
-      setSubmittedAmount(amount)
+      setSubmittedAmount(pendingDonation.amount)
       setShowETransfer(true)
       
       // Update total (optimistically add the amount)
-      setTotalRaised(prev => prev + amount)
+      setTotalRaised(prev => prev + pendingDonation.amount)
+      
+      // Clear pending donation
+      setPendingDonation(null)
     } catch (error: any) {
       console.error('Error submitting donation pledge:', error)
       alert(error.message || 'An error occurred. Please try again.')
+      setPendingDonation(null)
     } finally {
       setIsLoading(false)
     }
@@ -373,6 +398,51 @@ function DonateForm() {
 
       {/* Footer */}
       <Footer />
+
+      {/* Confirmation Dialog */}
+      <AlertDialog open={showConfirmDialog} onOpenChange={setShowConfirmDialog}>
+        <AlertDialogContent className="sm:max-w-md">
+          <AlertDialogHeader>
+            <AlertDialogTitle className="text-xl font-bold">Confirm Your Donation</AlertDialogTitle>
+            <AlertDialogDescription className="text-left space-y-3 pt-2">
+              <div className="bg-gray-50 rounded-lg p-4 space-y-2">
+                <div>
+                  <span className="font-semibold text-gray-700">Donation Amount:</span>
+                  <p className="text-lg font-bold" style={{ color: '#428ce4' }}>
+                    ${pendingDonation?.amount.toFixed(2)} CAD
+                  </p>
+                </div>
+                <div>
+                  <span className="font-semibold text-gray-700">Name:</span>
+                  <p className="text-gray-900">{pendingDonation?.name}</p>
+                </div>
+                <div>
+                  <span className="font-semibold text-gray-700">Email:</span>
+                  <p className="text-gray-900">{pendingDonation?.email}</p>
+                </div>
+              </div>
+              <p className="text-sm text-gray-600 pt-2">
+                Please review your donation details. Once confirmed, your pledge will be recorded and you'll receive e-Transfer instructions.
+              </p>
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter className="flex-col sm:flex-row gap-2">
+            <AlertDialogCancel 
+              onClick={() => setPendingDonation(null)}
+              className="w-full sm:w-auto"
+            >
+              Cancel
+            </AlertDialogCancel>
+            <AlertDialogAction
+              onClick={confirmDonation}
+              className="w-full sm:w-auto text-white font-bold uppercase tracking-wide"
+              style={{ backgroundColor: '#428ce4' }}
+            >
+              Confirm Donation
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   )
 }
