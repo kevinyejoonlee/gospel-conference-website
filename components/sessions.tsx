@@ -34,8 +34,53 @@ export default function Sessions() {
       <div className="pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-black/15 via-black/5 to-transparent z-10" />
       
       <div className={`relative grid grid-cols-1 lg:grid-cols-3 gap-0 h-full w-full ${isVisible ? 'animate-fade-in-up' : 'opacity-0'}`}>
-        {/* Left two-thirds: Main Sessions and Seminars with light background */}
-        <div className="lg:col-span-2 bg-[#fffcf3] flex items-center">
+        {/* Mobile: Centered layout (from about page) */}
+        <div className="lg:hidden bg-[#fffcf3] px-6 sm:px-8 md:px-10 py-10 sm:py-12 md:py-16 space-y-8 sm:space-y-10 md:space-y-12 relative overflow-hidden flex flex-col justify-center">
+          {/* Main Sessions */}
+          <div className="text-center">
+            <h3 className="text-2xl sm:text-3xl md:text-3xl font-bold text-[#A0302A] mb-6 sm:mb-8 uppercase tracking-tight" style={{ fontFamily: 'var(--font-spartan-font), sans-serif' }}>
+              Main Sessions
+            </h3>
+            <div className="space-y-4 sm:space-y-5 md:space-y-6" style={{ fontFamily: 'var(--font-hk-grotesk)' }}>
+              <div>
+                <p className="font-bold text-black text-base sm:text-lg md:text-xl mb-1.5 leading-tight">1. Christ the true and better <em>Adam</em></p>
+                <p className="text-gray-700 text-sm sm:text-base">Bible Passage</p>
+              </div>
+              <div>
+                <p className="font-bold text-black text-base sm:text-lg md:text-xl mb-1.5 leading-tight">2. Christ the true and better <em>Moses</em></p>
+                <p className="text-gray-700 text-sm sm:text-base">Bible Passage</p>
+              </div>
+              <div>
+                <p className="font-bold text-black text-base sm:text-lg md:text-xl mb-1.5 leading-tight">3. Christ the true and better <em>Isaiah</em></p>
+                <p className="text-gray-700 text-sm sm:text-base">Bible Passage</p>
+              </div>
+              <div>
+                <p className="font-bold text-black text-base sm:text-lg md:text-xl mb-1.5 leading-tight">4. Christ the true and better <em>David</em></p>
+                <p className="text-gray-700 text-sm sm:text-base">Bible Passage</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Seminars */}
+          <div className="text-center">
+            <h3 className="text-2xl sm:text-3xl md:text-3xl font-bold text-[#2A6A9B] mb-6 sm:mb-8 uppercase tracking-tight" style={{ fontFamily: 'var(--font-spartan-font), sans-serif' }}>
+              Seminars
+            </h3>
+            <div className="space-y-4 sm:space-y-5 md:space-y-6" style={{ fontFamily: 'var(--font-hk-grotesk)' }}>
+              <div>
+                <p className="font-bold text-black text-base sm:text-lg md:text-xl mb-1.5 leading-tight">Title of Seminar One</p>
+                <p className="text-gray-700 text-sm sm:text-base">Name of speaker</p>
+              </div>
+              <div>
+                <p className="font-bold text-black text-base sm:text-lg md:text-xl mb-1.5 leading-tight">Title of Seminar Two</p>
+                <p className="text-gray-700 text-sm sm:text-base">Name of speaker</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Desktop: Original two-column layout */}
+        <div className="hidden lg:flex lg:col-span-2 bg-[#fffcf3] items-center">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-0 relative w-full">
             {/* Main Sessions - left column */}
             <div className="px-4 md:px-6 pt-8 sm:pt-10 md:pt-10 lg:pt-12 pb-8 sm:pb-10 md:pb-10 lg:pb-20 relative flex flex-col items-center lg:items-start">
@@ -46,10 +91,10 @@ export default function Sessions() {
               <div className="absolute right-0 top-8 sm:top-10 md:top-10 lg:top-12 bottom-8 sm:bottom-10 md:bottom-10 lg:bottom-20 w-px bg-black hidden lg:block"></div>
               <ol className="space-y-4 sm:space-y-5 md:space-y-6 pl-0 w-full max-w-md lg:max-w-none mx-auto lg:mx-0" style={{ fontFamily: 'var(--font-hk-grotesk)' }}>
                 {[
-                  { name: "Adam", desc: "Bible passage TBD" },
-                  { name: "Moses", desc: "Bible passage TBD" },
-                  { name: "Isaiah", desc: "Bible passage TBD" },
-                  { name: "David", desc: "Bible passage TBD" },
+                  { name: "Adam", desc: "Bible Passage" },
+                  { name: "Moses", desc: "Bible Passage" },
+                  { name: "Isaiah", desc: "Bible Passage" },
+                  { name: "David", desc: "Bible Passage" },
                 ].map((session, i) => (
                   <li key={i} className="flex gap-2 sm:gap-3 justify-start">
                     <span className="font-bold text-black text-lg sm:text-xl flex-shrink-0">{i + 1}.</span>
@@ -57,7 +102,7 @@ export default function Sessions() {
                       <p className="font-bold text-black text-base sm:text-lg md:text-xl leading-tight">
                         Christ the true and better <em>{session.name}</em>
                       </p>
-                      <p className="text-sm sm:text-base md:text-lg text-black italic mt-0.5">{session.desc}</p>
+                      <p className="text-sm sm:text-base md:text-lg text-gray-700 mt-0.5">{session.desc}</p>
                     </div>
                   </li>
                 ))}
@@ -70,12 +115,15 @@ export default function Sessions() {
                 2026 Seminars
               </h2>
               <ol className="space-y-4 sm:space-y-5 md:space-y-6 pl-0 w-full max-w-md lg:max-w-none mx-auto lg:mx-0" style={{ fontFamily: 'var(--font-hk-grotesk)' }}>
-                {[1, 2].map((_, i) => (
+                {[
+                  { title: "Title of Seminar One", speaker: "Name of speaker" },
+                  { title: "Title of Seminar Two", speaker: "Name of speaker" },
+                ].map((seminar, i) => (
                   <li key={i} className="flex gap-2 sm:gap-3 justify-start">
                     <span className="font-bold text-black text-lg sm:text-xl flex-shrink-0">{i + 1}.</span>
                     <div>
-                      <p className="font-bold text-black text-base sm:text-lg md:text-xl leading-tight">TBD</p>
-                      <p className="text-sm sm:text-base md:text-lg text-black italic mt-0.5">TBD</p>
+                      <p className="font-bold text-black text-base sm:text-lg md:text-xl leading-tight">{seminar.title}</p>
+                      <p className="text-sm sm:text-base md:text-lg text-gray-700 mt-0.5">{seminar.speaker}</p>
                     </div>
                   </li>
                 ))}
@@ -84,9 +132,9 @@ export default function Sessions() {
           </div>
         </div>
 
-        {/* Read More Section - right third with dark red background and shadow */}
+        {/* Read More Section - right third with dark red background and shadow (desktop only) */}
         <div
-          className="lg:col-span-1 bg-[#A0302A] p-6 sm:p-8 md:p-10 lg:p-12 flex flex-col items-center justify-center min-h-[400px] sm:min-h-[400px] md:min-h-[350px] lg:h-full relative overflow-hidden"
+          className="hidden lg:flex lg:col-span-1 bg-[#A0302A] p-6 sm:p-8 md:p-10 lg:p-12 flex-col items-center justify-center min-h-[400px] sm:min-h-[400px] md:min-h-[350px] lg:h-full relative overflow-hidden"
           style={{
             backgroundImage: "url(/read-more-bg.svg)",
             backgroundSize: "105vw 100vh",
