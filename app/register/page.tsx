@@ -225,7 +225,7 @@ function RegisterForm() {
         <div 
           className="hidden lg:block w-full lg:w-1/3 h-screen relative shrink-0 overflow-hidden"
           style={{ 
-            backgroundImage: 'url("/about our theme background.svg")',
+            backgroundImage: 'url("/about%20our%20theme%20background.svg")',
             backgroundSize: 'cover',
             backgroundPosition: 'center',
             backgroundRepeat: 'no-repeat'
