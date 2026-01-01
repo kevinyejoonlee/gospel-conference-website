@@ -1,0 +1,6 @@
+# Cloudflare Pages Redirects
+# Ensure Next.js static assets are served correctly
+
+/_next/static/* /_next/static/:splat 200
+/_next/* /_next/:splat 200
+
