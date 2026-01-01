@@ -4,7 +4,3 @@
 /_next/static/* /_next/static/:splat 200
 /_next/* /_next/:splat 200
 
-# Block Vercel Analytics requests (not needed on Cloudflare)
-/_vercel/insights/* /404 404
-/_vercel/* /404 404
-
