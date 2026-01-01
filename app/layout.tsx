@@ -19,11 +19,13 @@ const _dmSans = DM_Sans({
 })
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://gospelconference.ca'),
   title: "Gospel Conference 2026 - Christ The True and Better",
   description:
     "Join us for Gospel Conference 2026: Christ The True and Better. March 18-20 in East Gwillimbury, Ontario.",
   icons: {
-    icon: '/websitelogo.svg',  
+    icon: '/websitelogo.svg',
+    apple: '/websitelogo.svg',
   },
   openGraph: {
     title: "Gospel Conference 2026 - Christ The True and Better",
@@ -32,7 +34,7 @@ export const metadata: Metadata = {
     siteName: "Gospel Conference",
     images: [
       {
-        url: "/og-image.jpg",
+        url: "/websitelogo.svg",
         width: 1200,
         height: 630,
         alt: "Gospel Conference 2026 - Christ The True and Better",
@@ -45,7 +47,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Gospel Conference 2026 - Christ The True and Better",
     description: "Join us for Gospel Conference 2026: Christ The True and Better. March 18-20 in East Gwillimbury, Ontario.",
-    images: ["/og-image.jpg"],
+    images: ["/websitelogo.svg"],
   },
 }
 

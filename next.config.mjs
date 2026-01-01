@@ -5,6 +5,12 @@ const nextConfig = {
   images: {
     unoptimized: true,
   },
+  // Ensure static assets are served correctly
+  assetPrefix: process.env.NODE_ENV === 'production' ? '' : undefined,
+  // Ensure proper base path for assets
+  basePath: '',
+  // Enable static file optimization
+  trailingSlash: false,
 }
 
 export default nextConfig
