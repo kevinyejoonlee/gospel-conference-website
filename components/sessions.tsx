@@ -164,7 +164,7 @@ export default function Sessions() {
             <div className="hidden lg:flex justify-center w-full mt-2 md:mt-0.5">
               <div className="transition-all duration-300 group-hover:translate-x-2 group-hover:scale-110">
               <img 
-                src="/read more arrow.svg" 
+                src="/read-more-arrow.svg" 
                 alt="Arrow" 
                   className="w-40 xl:w-48 h-auto object-contain transition-transform duration-300"
                 style={{ maxWidth: '240px' }}

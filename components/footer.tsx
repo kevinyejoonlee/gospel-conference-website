@@ -120,7 +120,7 @@ export function Footer() {
           <div className="lg:col-span-1 flex items-center justify-start">
             <div className="mb-4">
               <img 
-                src="/Footer Logo.svg" 
+                src="/footer-logo-alt.svg" 
                 alt="Gospel Conference Logo" 
                 className="h-20 sm:h-24 md:h-28 lg:h-36 xl:h-40 w-auto"
               />

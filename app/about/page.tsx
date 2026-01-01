@@ -111,7 +111,7 @@ export default function About() {
         <div 
           className="w-full lg:w-2/3 text-white px-6 sm:px-8 md:px-10 lg:px-12 xl:px-16 py-10 sm:py-12 md:py-16 lg:py-20 relative"
           style={{
-            backgroundImage: "url('/about%20our%20theme%20background.svg')",
+            backgroundImage: "url('/about-our-theme-background.svg')",
             backgroundSize: "cover",
             backgroundPosition: "center",
             backgroundRepeat: "no-repeat",

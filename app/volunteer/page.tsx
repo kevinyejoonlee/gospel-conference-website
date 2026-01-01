@@ -251,7 +251,7 @@ function VolunteerForm() {
         <div 
           className="w-full lg:w-[65%] lg:h-[100vh] bg-[#202f5a] px-4 sm:px-5 md:px-8 lg:px-8 xl:px-10 py-6 sm:py-8 pt-4 lg:pt-16 lg:pb-4 relative lg:overflow-y-auto volunteer-scrollbar"
           style={{
-            backgroundImage: "url('/volunteer%20hue%20for%20form.svg')",
+            backgroundImage: "url('/volunteer-hue-for-form.svg')",
             backgroundSize: "cover",
             backgroundPosition: "center",
             backgroundRepeat: "no-repeat",
