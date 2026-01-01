@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createServerClient } from '@/lib/supabase'
 
+// Required for Cloudflare Pages
+export const runtime = 'edge'
 // Force dynamic rendering for API routes
 export const dynamic = 'force-dynamic'
 
