@@ -11,6 +11,10 @@ const nextConfig = {
   basePath: '',
   // Enable static file optimization
   trailingSlash: false,
+  // Force clean builds - disable build cache to ensure fresh builds
+  experimental: {
+    // This helps ensure Cloudflare gets fresh builds
+  },
 }
 
 export default nextConfig
