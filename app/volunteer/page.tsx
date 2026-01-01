@@ -2,17 +2,214 @@
 
 import type React from "react"
 import { useState } from "react"
+import { format, parse } from "date-fns"
+import { CalendarIcon } from "lucide-react"
 import { Navbar } from "@/components/navbar"
 import { Footer } from "@/components/footer"
+import { Calendar } from "@/components/ui/calendar"
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
+import { cn } from "@/lib/utils"
 
 function VolunteerForm() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitted, setSubmitted] = useState(false)
+  const [firstName, setFirstName] = useState("")
+  const [lastName, setLastName] = useState("")
+  const [dateOfBirth, setDateOfBirth] = useState<Date | undefined>(undefined)
+  const [dateInput, setDateInput] = useState("")
+  const [dateError, setDateError] = useState<string>("")
+  const [formError, setFormError] = useState<string>("")
+
+  const handleDateSelect = (date: Date | undefined) => {
+    setDateOfBirth(date)
+    if (date) {
+      const today = new Date()
+      today.setHours(23, 59, 59, 999)
+      if (date > today) {
+        setDateError("Date of birth cannot be in the future")
+        setDateInput("")
+      } else {
+        setDateError("")
+        setDateInput(format(date, "MM/dd/yyyy"))
+        if (formError) setFormError("")
+      }
+    } else {
+      setDateInput("")
+      setDateError("")
+      if (formError) setFormError("")
+    }
+  }
+
+  const handleDateInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value
+    setDateInput(value)
+    setDateError("")
+    if (formError) setFormError("")
+
+    // Try to parse the typed date
+    if (value.trim()) {
+      try {
+        // Try MM/DD/YYYY format
+        const parsedDate = parse(value, "MM/dd/yyyy", new Date())
+        if (!isNaN(parsedDate.getTime())) {
+          const today = new Date()
+          today.setHours(23, 59, 59, 999)
+          if (parsedDate > today) {
+            setDateError("Date of birth cannot be in the future")
+            setDateOfBirth(undefined)
+          } else {
+            setDateOfBirth(parsedDate)
+            setDateError("")
+          }
+        }
+      } catch (error) {
+        // Invalid date format, but let user keep typing
+        setDateOfBirth(undefined)
+      }
+    } else {
+      setDateOfBirth(undefined)
+    }
+  }
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    setFormError("") // Clear any previous errors
+
+    // Validate date before submission
+    if (!dateOfBirth && !dateInput.trim()) {
+      setDateError("Please enter your date of birth")
+      setFormError("Please enter your date of birth")
+      setIsSubmitting(false)
+      return
+    }
+
+    // If there's dateInput but no dateOfBirth, try to parse it
+    if (dateInput.trim() && !dateOfBirth) {
+      try {
+        const parsedDate = parse(dateInput.trim(), "MM/dd/yyyy", new Date())
+        if (isNaN(parsedDate.getTime())) {
+          setDateError("Please enter a valid date (MM/DD/YYYY)")
+          setFormError("Please enter a valid date (MM/DD/YYYY)")
+          setIsSubmitting(false)
+          return
+        }
+        const today = new Date()
+        today.setHours(23, 59, 59, 999)
+        if (parsedDate > today) {
+          setDateError("Date of birth cannot be in the future")
+          setFormError("Date of birth cannot be in the future")
+          setIsSubmitting(false)
+          return
+        }
+        setDateOfBirth(parsedDate)
+        setDateInput(format(parsedDate, "MM/dd/yyyy"))
+      } catch (error) {
+        setDateError("Please enter a valid date (MM/DD/YYYY)")
+        setFormError("Please enter a valid date (MM/DD/YYYY)")
+        setIsSubmitting(false)
+        return
+      }
+    }
+
     setIsSubmitting(true)
-    // Formspree handles the rest - no need to prevent default or do anything else
-    // The form will submit naturally to Formspree
+
+    // Create FormData from the form
+    const form = e.currentTarget
+    const formData = new FormData(form)
+    
+    // Ensure dateOfBirth is in the form data
+    if (dateOfBirth) {
+      formData.set('dateOfBirth', format(dateOfBirth, "MM/dd/yyyy"))
+    }
+    
+    // Extract form data for Supabase
+    const volunteerData = {
+      firstName: formData.get('firstName') as string,
+      lastName: formData.get('lastName') as string,
+      preferredName: formData.get('preferredName') as string || '',
+      dateOfBirth: dateOfBirth ? format(dateOfBirth, "yyyy-MM-dd") : formData.get('dateOfBirth') as string,
+      address: formData.get('address') as string,
+      email: formData.get('email') as string,
+      phoneNumber: formData.get('phoneNumber') as string,
+      churchAttendance: formData.get('churchAttendance') as string,
+      leadershipCapacity: formData.get('leadershipCapacity') as string,
+      testimony: formData.get('testimony') as string,
+      gospel: formData.get('gospel') as string,
+      groupLeading: formData.get('groupLeading') as string,
+      agreement: formData.get('agreement') as string
+    }
+    
+    // Add unique timestamp to subject to prevent email threading - each submission is a new email
+    const timestamp = Date.now()
+    const currentSubject = formData.get('_subject') as string || ''
+    if (currentSubject) {
+      // Extract the base subject (remove any existing timestamp if present)
+      const baseSubject = currentSubject.split(' - ').slice(0, 2).join(' - ')
+      formData.set('_subject', `${baseSubject} - ${timestamp}`)
+    }
+
+    try {
+      // Submit to Supabase first
+      const supabaseResponse = await fetch('/api/volunteers', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(volunteerData),
+      })
+
+      // Also send email via FormSubmit (continue even if Supabase fails)
+      const recipientEmail = atob('aGVsbG9AZ29zcGVsY29uZmVyZW5jZS5jYQ==')
+      let emailResponse: Response | null = null
+      try {
+        emailResponse = await fetch(`https://formsubmit.co/${recipientEmail}`, {
+          method: 'POST',
+          body: formData,
+        })
+      } catch (emailError) {
+        console.error('Error sending email:', emailError)
+        // Continue to check Supabase response
+      }
+
+      // Check if at least one submission succeeded
+      if (supabaseResponse.ok || (emailResponse && emailResponse.ok)) {
+        setSubmitted(true)
+      } else {
+        // Both failed - show error
+        let errorMessage = 'There was an error submitting your application. Please try again.'
+        
+        if (!supabaseResponse.ok) {
+          try {
+            const supabaseError = await supabaseResponse.json().catch(() => null)
+            if (supabaseError?.error) {
+              errorMessage = `Database error: ${supabaseError.error}. Please try again.`
+            }
+          } catch (e) {
+            // Ignore JSON parse errors
+          }
+        }
+        
+        if (!emailResponse || !emailResponse.ok) {
+          if (errorMessage.includes('Database error')) {
+            errorMessage += ' Also, the email notification failed to send.'
+          } else {
+            errorMessage = 'Failed to send email notification. Please try again.'
+          }
+        }
+        
+        setFormError(errorMessage)
+      }
+    } catch (error) {
+      console.error('Error submitting form:', error)
+      // Check if it's a network error
+      if (error instanceof TypeError && error.message.includes('fetch')) {
+        setFormError('Network error: Please check your internet connection and try again.')
+      } else {
+        setFormError('There was an error submitting the form. Please try again.')
+      }
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   return (
@@ -76,11 +273,30 @@ function VolunteerForm() {
                 </div>
               ) : (
                 <form 
-                  action="https://formspree.io/f/xvgelvwg"
-                  method="POST"
                   onSubmit={handleSubmit}
                   className="space-y-2 sm:space-y-2.5 lg:space-y-1.5"
                 >
+                  {/* Hidden fields for FormSubmit */}
+                  <input type="hidden" name="_captcha" value="false" />
+                  <input type="hidden" name="_template" value="table" />
+                  <input type="hidden" name="formType" value="VOLUNTEER" />
+                  <input 
+                    type="hidden" 
+                    name="_autoresponse" 
+                    value="Thank you for your interest in volunteering at Gospel Conference 2026! We have received your application and will be in contact with you soon. We appreciate your willingness to serve and look forward to reviewing your application." 
+                  />
+                  <input type="hidden" name="_autoresponsesubject" value="Thank you for your volunteer application!" />
+                  <input 
+                    type="hidden" 
+                    name="fullName" 
+                    value={`${firstName} ${lastName}`.trim()} 
+                  />
+                  <input 
+                    type="hidden" 
+                    name="_subject" 
+                    value={`[VOLUNTEER] - ${firstName} ${lastName}`.trim()} 
+                  />
+                  
                   {/* Row 1: First, Last, Preferred */}
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-2 lg:gap-1.5">
                     <div>
@@ -90,6 +306,8 @@ function VolunteerForm() {
                       <input
                         type="text"
                         name="firstName"
+                        value={firstName}
+                        onChange={(e) => setFirstName(e.target.value)}
                         required
                         className="w-full px-4 py-3 sm:px-3 sm:py-1.5 lg:px-3 lg:py-1 bg-gray-200 border-0 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-400 text-sm sm:text-sm rounded-md font-[var(--font-dm-sans-font)]"
                       />
@@ -101,6 +319,8 @@ function VolunteerForm() {
                       <input
                         type="text"
                         name="lastName"
+                        value={lastName}
+                        onChange={(e) => setLastName(e.target.value)}
                         required
                         className="w-full px-4 py-3 sm:px-3 sm:py-1.5 lg:px-3 lg:py-1 bg-gray-200 border-0 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-400 text-sm sm:text-sm rounded-md font-[var(--font-dm-sans-font)]"
                       />
@@ -123,12 +343,50 @@ function VolunteerForm() {
                       <label className="block text-white text-xs sm:text-sm mb-1 font-[var(--font-dm-sans-font)]">
                         Date of birth (MM/DD/YYYY) <span className="text-red-400">*</span>
                       </label>
-                      <input
-                        type="text"
-                        name="dateOfBirth"
-                        required
-                        className="w-full px-4 py-3 sm:px-3 sm:py-1.5 lg:px-3 lg:py-1 bg-gray-200 border-0 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-400 text-sm sm:text-sm rounded-md font-[var(--font-dm-sans-font)]"
-                      />
+                      <Popover>
+                        <div className="relative">
+                          <input
+                            type="text"
+                            name="dateOfBirth"
+                            value={dateInput}
+                            onChange={handleDateInputChange}
+                            required
+                            className={cn(
+                              "w-full px-4 py-3 sm:px-3 sm:py-1.5 lg:px-3 lg:py-1 bg-gray-200 border-0 text-gray-900 focus:outline-none focus:ring-2 text-sm sm:text-sm rounded-md font-[var(--font-dm-sans-font)] pr-10",
+                              dateError ? "focus:ring-red-400" : "focus:ring-blue-400"
+                            )}
+                          />
+                          <PopoverTrigger asChild>
+                            <button
+                              type="button"
+                              className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-600 hover:text-gray-900 focus:outline-none cursor-pointer"
+                            >
+                              <CalendarIcon className="h-4 w-4" />
+                            </button>
+                          </PopoverTrigger>
+                        </div>
+                        <PopoverContent className="w-auto p-0" align="start">
+                          <Calendar
+                            key={dateOfBirth?.toISOString() || 'no-date'}
+                            mode="single"
+                            selected={dateOfBirth}
+                            onSelect={handleDateSelect}
+                            disabled={(date) => {
+                              const today = new Date()
+                              today.setHours(23, 59, 59, 999)
+                              return date > today
+                            }}
+                            initialFocus
+                            defaultMonth={dateOfBirth || new Date()}
+                            captionLayout="dropdown"
+                            fromYear={1949}
+                            toYear={2008}
+                          />
+                        </PopoverContent>
+                      </Popover>
+                      {dateError && (
+                        <p className="text-red-400 text-xs mt-1">{dateError}</p>
+                      )}
                     </div>
                     <div>
                       <label className="block text-white text-xs sm:text-sm mb-1 font-[var(--font-dm-sans-font)]">
@@ -242,6 +500,13 @@ function VolunteerForm() {
                       rows={2}
                     />
                   </div>
+
+                  {/* Form Error Message */}
+                  {formError && (
+                    <div className="mt-3 sm:mt-4 lg:mt-2 mb-2">
+                      <p className="text-red-400 text-xs sm:text-sm">{formError}</p>
+                    </div>
+                  )}
 
                   <div className="flex justify-start mt-3 sm:mt-4 lg:mt-2 mb-6 sm:mb-8 lg:mb-4">
                     <button

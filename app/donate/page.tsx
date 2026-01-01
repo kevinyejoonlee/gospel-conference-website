@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect, Suspense } from "react"
+import { useState, Suspense, useEffect } from "react"
 import { Navbar } from "@/components/navbar"
 import { Footer } from "@/components/footer"
 import {
@@ -23,51 +23,35 @@ function DonateForm() {
   const [showETransfer, setShowETransfer] = useState(false)
   const [submittedAmount, setSubmittedAmount] = useState(0)
   const [copied, setCopied] = useState(false)
-  const [totalRaised, setTotalRaised] = useState(0)
-  const [isLoadingTotal, setIsLoadingTotal] = useState(true)
   const [showConfirmDialog, setShowConfirmDialog] = useState(false)
   const [pendingDonation, setPendingDonation] = useState<{amount: number, name: string, email: string} | null>(null)
-
+  const [totalRaised, setTotalRaised] = useState(0)
+  const [isLoadingTotal, setIsLoadingTotal] = useState(true)
+  const [formError, setFormError] = useState<string>("")
   const goal = 3000
+  const progressPercentage = (totalRaised / goal) * 100
 
   const predefinedAmounts = [25, 50, 100, 150, 200, 500]
   const email = "sheepgatefellowship@gmail.com"
 
-  // Fetch total donations from Formspree
+  // Fetch total donations on mount
   useEffect(() => {
-    const fetchDonations = async () => {
+    const fetchTotalDonations = async () => {
       try {
-        setIsLoadingTotal(true)
-        // Formspree API endpoint to get submissions
-        // Note: You'll need to get your Formspree API key from https://formspree.io/forms/xblnwppo/integration
-        const response = await fetch('https://formspree.io/api/0/forms/xblnwppo/submissions', {
-          headers: {
-            'Accept': 'application/json',
-          },
-        })
-
+        const response = await fetch('/api/donations')
         if (response.ok) {
           const data = await response.json()
-          // Sum up all donation amounts
-          const total = data.submissions?.reduce((sum: number, submission: any) => {
-            const amount = parseFloat(submission.donationAmount || 0)
-            return sum + amount
-          }, 0) || 0
-          
-          setTotalRaised(total)
+          setTotalRaised(data.totalRaised || 0)
         }
       } catch (error) {
-        console.error('Error fetching donations:', error)
-        // Keep default value of 0
+        console.error('Error fetching total donations:', error)
       } finally {
         setIsLoadingTotal(false)
       }
     }
-
-    fetchDonations()
+    
+    fetchTotalDonations()
   }, [])
-
-  const progressPercentage = (totalRaised / goal) * 100
 
   const copyEmail = () => {
     navigator.clipboard.writeText(email)
@@ -75,24 +59,25 @@ function DonateForm() {
     setTimeout(() => setCopied(false), 2000)
   }
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+    setFormError("") // Clear any previous errors
     
     // Determine donation amount
     const amount = customAmount ? parseFloat(customAmount) : (selectedAmount ? parseFloat(selectedAmount) : 0)
     
     if (amount <= 0) {
-      alert('Please select or enter a donation amount.')
+      setFormError('Please select or enter a donation amount.')
       return
     }
 
     if (amount < 1) {
-      alert('Minimum donation amount is $1.00')
+      setFormError('Minimum donation amount is $1.00')
       return
     }
 
     if (!donorName || !donorEmail) {
-      alert('Please provide your name and email.')
+      setFormError('Please provide your name and email.')
       return
     }
 
@@ -106,39 +91,99 @@ function DonateForm() {
 
     setIsLoading(true)
     setShowConfirmDialog(false)
+    setFormError("") // Clear any previous errors
 
     try {
-      // Submit to Formspree to track the pledge
-      const response = await fetch('https://formspree.io/f/xblnwppo', {
+      // Submit to Supabase first
+      const supabaseResponse = await fetch('/api/donations', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          donorName: pendingDonation.name,
-          donorEmail: pendingDonation.email,
-          donationAmount: pendingDonation.amount,
-          type: 'donation-pledge',
-          timestamp: new Date().toISOString(),
+          name: pendingDonation.name,
+          email: pendingDonation.email,
+          amount: pendingDonation.amount,
         }),
       })
 
-      if (!response.ok) {
-        throw new Error('Failed to submit donation pledge')
+      // Also send email via FormSubmit (continue even if Supabase fails)
+      const formData = new FormData()
+      formData.append('formType', 'DONATE')
+      formData.append('fullName', pendingDonation.name)
+      formData.append('email', pendingDonation.email)
+      formData.append('donationAmount', pendingDonation.amount.toString())
+      // Add unique timestamp to prevent email threading - each submission is a new email
+      const timestamp = Date.now()
+      formData.append('_subject', `[DONATE] - ${pendingDonation.name} - ${timestamp}`)
+      formData.append('_captcha', 'false')
+      formData.append('_template', 'table')
+      formData.append('_autoresponse', `Thank you for your generous donation of $${pendingDonation.amount.toFixed(2)} to Gospel Conference 2026! We have received your donation and truly appreciate your support. Your contribution helps make this event possible and will be used to cover event costs (venue, materials, food, etc.). We are grateful for your generosity and look forward to seeing you at the conference!`)
+      formData.append('_autoresponsesubject', 'Thank you for your donation to Gospel Conference 2026!')
+
+      // Decode base64 email to prevent scraping
+      const recipientEmail = atob('aGVsbG9AZ29zcGVsY29uZmVyZW5jZS5jYQ==')
+      let emailResponse: Response | null = null
+      try {
+        emailResponse = await fetch(`https://formsubmit.co/${recipientEmail}`, {
+          method: 'POST',
+          body: formData,
+        })
+      } catch (emailError) {
+        console.error('Error sending email:', emailError)
+        // Continue to check Supabase response
       }
 
-      // Show e-Transfer instructions
-      setSubmittedAmount(pendingDonation.amount)
-      setShowETransfer(true)
-      
-      // Update total (optimistically add the amount)
-      setTotalRaised(prev => prev + pendingDonation.amount)
-      
-      // Clear pending donation
-      setPendingDonation(null)
+      // Check if at least one submission succeeded
+      if (supabaseResponse.ok || (emailResponse && emailResponse.ok)) {
+        // Update total raised if Supabase succeeded
+        if (supabaseResponse.ok) {
+          try {
+            const supabaseData = await supabaseResponse.json()
+            // Refresh total donations
+            const totalResponse = await fetch('/api/donations')
+            if (totalResponse.ok) {
+              const totalData = await totalResponse.json()
+              setTotalRaised(totalData.totalRaised || 0)
+            }
+          } catch (error) {
+            console.error('Error updating total:', error)
+          }
+        }
+
+        // Show e-Transfer instructions
+        setSubmittedAmount(pendingDonation.amount)
+        setShowETransfer(true)
+        setPendingDonation(null)
+      } else {
+        // Both failed - show error
+        let errorMessage = 'There was an error submitting your donation. Please try again.'
+        
+        if (!supabaseResponse.ok) {
+          try {
+            const supabaseError = await supabaseResponse.json().catch(() => null)
+            if (supabaseError?.error) {
+              errorMessage = `Database error: ${supabaseError.error}. Please try again.`
+            }
+          } catch (e) {
+            // Ignore JSON parse errors
+          }
+        }
+        
+        if (!emailResponse || !emailResponse.ok) {
+          if (errorMessage.includes('Database error')) {
+            errorMessage += ' Also, the email notification failed to send.'
+          } else {
+            errorMessage = 'Failed to send email notification. Please try again.'
+          }
+        }
+        
+        setFormError(errorMessage)
+        setPendingDonation(null)
+      }
     } catch (error: any) {
-      console.error('Error submitting donation pledge:', error)
-      alert(error.message || 'An error occurred. Please try again.')
+      console.error('Error submitting donation:', error)
+      setFormError(error.message || 'An unexpected error occurred. Please try again.')
       setPendingDonation(null)
     } finally {
       setIsLoading(false)
@@ -224,41 +269,33 @@ function DonateForm() {
                   </p>
                   
                   <div className="relative w-full py-1.5 sm:py-2">
-                    {isLoadingTotal ? (
-                      <div className="w-full h-3 sm:h-4 bg-white/80 rounded-full relative shadow-inner flex items-center justify-center">
-                        <span className="text-xs text-gray-500">Loading...</span>
-                      </div>
-                    ) : (
-                      <>
-                        <div className="w-full h-3 sm:h-4 bg-white/80 rounded-full relative shadow-inner" style={{ overflow: 'visible' }}>
-                          <div
-                            className="h-full rounded-full transition-all duration-500 ease-out"
-                            style={{ 
-                              width: `${Math.min(progressPercentage, 100)}%`,
-                              backgroundColor: '#428ce4',
-                              boxShadow: 'inset 0 1px 2px rgba(0,0,0,0.1)'
-                            }}
-                          />
-                          {progressPercentage > 0 && (
-                            <div
-                              className="absolute top-1/2 -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 rounded-full border-2 border-white shadow-lg transition-all duration-500 ease-out z-10"
-                              style={{ 
-                                left: `calc(${Math.min(progressPercentage, 100)}% - 8px)`,
-                                backgroundColor: '#428ce4'
-                              }}
-                            />
-                          )}
-                        </div>
-                        <div className="mt-2 flex justify-between items-center text-xs sm:text-sm">
-                          <span className="font-semibold" style={{ color: '#428ce4' }}>
-                            ${totalRaised.toLocaleString('en-CA', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} pledged
-                          </span>
-                          <span className="text-gray-600">
-                            ${Math.max(0, goal - totalRaised).toLocaleString('en-CA', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} to go
-                          </span>
-                        </div>
-                      </>
-                    )}
+                    <div className="w-full h-3 sm:h-4 bg-white/80 rounded-full relative shadow-inner" style={{ overflow: 'visible' }}>
+                      <div
+                        className="h-full rounded-full transition-all duration-500 ease-out"
+                        style={{ 
+                          width: `${Math.min(progressPercentage, 100)}%`,
+                          backgroundColor: '#428ce4',
+                          boxShadow: 'inset 0 1px 2px rgba(0,0,0,0.1)'
+                        }}
+                      />
+                      {progressPercentage > 0 && (
+                        <div
+                          className="absolute top-1/2 -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 rounded-full border-2 border-white shadow-lg transition-all duration-500 ease-out z-10"
+                          style={{ 
+                            left: `calc(${Math.min(progressPercentage, 100)}% - 8px)`,
+                            backgroundColor: '#428ce4'
+                          }}
+                        />
+                      )}
+                    </div>
+                    <div className="mt-2 flex justify-between items-center text-xs sm:text-sm">
+                      <span className="font-semibold" style={{ color: '#428ce4' }}>
+                        {isLoadingTotal ? 'Loading...' : `Raised: $${totalRaised.toLocaleString('en-CA', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}
+                      </span>
+                      <span className="text-gray-600">
+                        Goal: ${goal.toLocaleString('en-CA', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                      </span>
+                    </div>
                   </div>
                 </div>
 
@@ -326,6 +363,15 @@ function DonateForm() {
                     </div>
                   </div>
 
+                  {/* Form Error Message */}
+                  {formError && (
+                    <div className="mb-4 sm:mb-5">
+                      <div className="bg-red-50 border-2 border-red-400 rounded-lg p-3 sm:p-4">
+                        <p className="text-red-700 text-xs sm:text-sm font-medium">{formError}</p>
+                      </div>
+                    </div>
+                  )}
+
                   {/* Submit Button */}
                   <button 
                     type="submit"
@@ -376,11 +422,12 @@ function DonateForm() {
                     Important
                   </h3>
                   <p className="text-xs sm:text-sm text-gray-700 leading-relaxed mb-2">
-                    Please include <strong>"Gospel Conference"</strong> in the notes section of your e-Transfer. For any questions please contant 416-464-6230.
+                    ⚠️ Please include <strong>"Gospel Conference"</strong> in the notes section of your e-Transfer. 
                   </p>
-                  {/* <p className="text-xs text-gray-600">
-                    Donation amount: ${submittedAmount.toFixed(2)}
-                  </p> */}
+                  <p className="text-xs sm:text-sm text-gray-700 leading-relaxed mt-3 pt-3 border-t border-gray-300">
+                    📄 A receipt will be issued to your email soon. <br></br> <br></br>
+                    <span className="font-semibold">Thank you for your support.</span>
+                  </p>
                 </div>
 
                 {/* Reset Button */}
@@ -404,27 +451,27 @@ function DonateForm() {
         <AlertDialogContent className="sm:max-w-md">
           <AlertDialogHeader>
             <AlertDialogTitle className="text-xl font-bold">Confirm Your Donation</AlertDialogTitle>
-            <AlertDialogDescription className="text-left space-y-3 pt-2">
+            <div className="text-left space-y-3 pt-2">
               <div className="bg-gray-50 rounded-lg p-4 space-y-2">
                 <div>
                   <span className="font-semibold text-gray-700">Donation Amount:</span>
-                  <p className="text-lg font-bold" style={{ color: '#428ce4' }}>
+                  <div className="text-lg font-bold" style={{ color: '#428ce4' }}>
                     ${pendingDonation?.amount.toFixed(2)} CAD
-                  </p>
+                  </div>
                 </div>
                 <div>
                   <span className="font-semibold text-gray-700">Name:</span>
-                  <p className="text-gray-900">{pendingDonation?.name}</p>
+                  <div className="text-gray-900">{pendingDonation?.name}</div>
                 </div>
                 <div>
                   <span className="font-semibold text-gray-700">Email:</span>
-                  <p className="text-gray-900">{pendingDonation?.email}</p>
+                  <div className="text-gray-900">{pendingDonation?.email}</div>
                 </div>
               </div>
-              <p className="text-sm text-gray-600 pt-2">
+              <AlertDialogDescription className="text-sm text-gray-600 pt-2">
                 Please review your donation details. Once confirmed, your pledge will be recorded and you'll receive e-Transfer instructions.
-              </p>
-            </AlertDialogDescription>
+              </AlertDialogDescription>
+            </div>
           </AlertDialogHeader>
           <AlertDialogFooter className="flex-col sm:flex-row gap-2">
             <AlertDialogCancel 

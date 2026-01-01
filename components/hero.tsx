@@ -58,7 +58,7 @@ export default function Hero() {
               href="/register"
                 className="font-dm-sans inline-block text-sm sm:text-base md:text-xl border-2 border-white bg-gray-800/50 text-white px-6 sm:px-5 md:px-7 py-2 sm:py-1 md:py-2 rounded-full font-bold transition duration-300 hover:bg-white hover:text-black hover:shadow-lg hover:-translate-y-[2px]"
             >
-              REGISTER JAN 1ST            </Link>
+              REGISTER NOW            </Link>
             </div>
           </div>
         </div>
