@@ -40,7 +40,9 @@ Since your app uses API routes (for Supabase integration), you need to ensure Cl
 1. In Cloudflare Pages, go to **Settings** > **Builds & deployments**
 2. Make sure the **Framework preset** is set to **Next.js**
 3. The build command should be: `npm run build` or `pnpm build`
-4. The output directory should be: `.next`
+4. **IMPORTANT**: The output directory should be: `.next` (NOT `out`)
+   - Cloudflare may default to `out` for static sites, but you need `.next` for API routes
+   - If you see "Output directory 'out' not found" error, change it to `.next` in Cloudflare settings
 
 ### Build Configuration
 
