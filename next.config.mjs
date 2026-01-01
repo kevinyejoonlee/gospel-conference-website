@@ -11,12 +11,6 @@ const nextConfig = {
   basePath: '',
   // Enable static file optimization
   trailingSlash: false,
-  // Ensure public folder is included in build
-  publicRuntimeConfig: {},
-  // Optimize for Cloudflare Pages
-  experimental: {
-    // Ensure proper static asset handling
-  },
 }
 
 export default nextConfig
