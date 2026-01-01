@@ -7,6 +7,7 @@ import GetInvolved from "@/components/get-involved"
 import Sing from "@/components/sing"
 import Footer from "@/components/footer"
 
+
 export default function HomeV2() {
   return (
     <main className="min-h-screen">
