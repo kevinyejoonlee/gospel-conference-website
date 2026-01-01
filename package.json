@@ -6,8 +6,7 @@
     "build": "next build",
     "dev": "next dev",
     "lint": "eslint .",
-    "start": "next start",
-    "pages:build": "npx @opennextjs/cloudflare"
+    "start": "next start"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",
@@ -68,7 +67,7 @@
     "zod": "3.25.76"
   },
   "devDependencies": {
-    "@opennextjs/cloudflare": "^1.0.0",
+    "@cloudflare/next-on-pages": "^1.0.0",
     "@tailwindcss/postcss": "^4.1.9",
     "@types/node": "^22",
     "@types/react": "^19",

@@ -1,26 +1,23 @@
 # Cloudflare Pages Setup for Next.js with API Routes
 
+# Cloudflare Pages Setup for Next.js with API Routes
+
 ## ⚠️ IMPORTANT: Cloudflare Pages Requires Adapter
 
-Cloudflare Pages does **NOT** natively support Next.js API routes with `.next` directory. You need the `@opennextjs/cloudflare` adapter.
+Cloudflare Pages does **NOT** natively support Next.js API routes with `.next` directory. You need the `@cloudflare/next-on-pages` adapter.
 
-## Current Configuration
+## Current Configuration (Matches Your Cloudflare Settings)
 
-- **Build Command**: `npm run pages:build` (uses adapter)
-- **Build Output Directory**: `.opennext` (adapter output)
-- **Framework Preset**: Next.js (if available)
+- **Build Command**: `npx @cloudflare/next-on-pages@1` ✓
+- **Build Output Directory**: `.vercel/output/static` ✓
+- **Framework Preset**: Next.js ✓
 
-## Setup Steps
+## Your Cloudflare Settings Are CORRECT!
 
-1. **Install adapter** (already in package.json):
-   ```bash
-   npm install
-   ```
-
-2. **Update Cloudflare Pages settings**:
-   - Build command: `npm run pages:build`
-   - Build output directory: `.opennext`
-   - Framework preset: **Next.js**
+Your current Cloudflare configuration is correct:
+- ✅ Build command: `npx @cloudflare/next-on-pages@1`
+- ✅ Build output: `.vercel/output/static`
+- ✅ Framework preset: Next.js
 
 ## Important Settings in Cloudflare Pages
 
