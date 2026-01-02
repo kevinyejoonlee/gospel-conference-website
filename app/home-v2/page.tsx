@@ -12,7 +12,7 @@ export default function HomeV2() {
   return (
     <main className="min-h-screen">
       <Navbar />
-      <Hero />
+      <Hero />f
       <Video />
       <Speakers />
       <Sessions />

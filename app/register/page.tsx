@@ -601,6 +601,8 @@ function RegisterForm() {
                         </span>
                         <span className="text-xs text-gray-600 block mt-0.5">
                           Send to <span className="font-semibold">sheepgatefellowship@gmail.com</span>
+                          <br />
+                          Please include <span className="font-semibold">"Gospel Conference"</span> in the e-transfer notes.
                         </span>
                       </div>
                     </label>
