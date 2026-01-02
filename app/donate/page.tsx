@@ -31,7 +31,7 @@ function DonateForm() {
   const goal = 3000
   const progressPercentage = (totalRaised / goal) * 100
 
-  const predefinedAmounts = [25, 50, 100, 150, 200, 500]
+  const predefinedAmounts = [5, 10, 20, 50, 100, 500]
   const email = "sheepgatefellowship@gmail.com"
 
   // Fetch total donations on mount
@@ -264,38 +264,46 @@ function DonateForm() {
 
                 {/* Progress Bar */}
                 <div className="mb-4 sm:mb-5">
-                  <p className="font-bold mb-2 text-xs sm:text-sm md:text-base" style={{ color: '#428ce4' }}>
-                    GOAL: ${goal.toLocaleString()} CAD
+                  <p className={`font-bold mb-2 text-xs sm:text-sm md:text-base ${totalRaised >= goal ? 'text-green-600' : ''}`} style={totalRaised >= goal ? {} : { color: '#428ce4' }}>
+                    {totalRaised >= goal ? '🎉 GOAL REACHED! 🎉' : `GOAL: ${goal.toLocaleString()} CAD`}
                   </p>
                   
                   <div className="relative w-full py-1.5 sm:py-2">
                     <div className="w-full h-3 sm:h-4 bg-white/80 rounded-full relative shadow-inner" style={{ overflow: 'visible' }}>
                       <div
-                        className="h-full rounded-full transition-all duration-500 ease-out"
+                        className={`h-full rounded-full transition-all duration-500 ease-out ${totalRaised >= goal ? 'animate-pulse' : ''}`}
                         style={{ 
                           width: `${Math.min(progressPercentage, 100)}%`,
-                          backgroundColor: '#428ce4',
-                          boxShadow: 'inset 0 1px 2px rgba(0,0,0,0.1)'
+                          backgroundColor: totalRaised >= goal ? '#10b981' : '#428ce4',
+                          boxShadow: totalRaised >= goal ? '0 0 10px rgba(16, 185, 129, 0.5)' : 'inset 0 1px 2px rgba(0,0,0,0.1)'
                         }}
                       />
                       {progressPercentage > 0 && (
                         <div
-                          className="absolute top-1/2 -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 rounded-full border-2 border-white shadow-lg transition-all duration-500 ease-out z-10"
+                          className={`absolute top-1/2 -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 rounded-full border-2 border-white shadow-lg transition-all duration-500 ease-out z-10 ${totalRaised >= goal ? 'animate-bounce' : ''}`}
                           style={{ 
                             left: `calc(${Math.min(progressPercentage, 100)}% - 8px)`,
-                            backgroundColor: '#428ce4'
+                            backgroundColor: totalRaised >= goal ? '#10b981' : '#428ce4'
                           }}
                         />
                       )}
                     </div>
                     <div className="mt-2 flex justify-between items-center text-xs sm:text-sm">
-                      <span className="font-semibold" style={{ color: '#428ce4' }}>
+                      <span className={`font-semibold ${totalRaised >= goal ? 'text-green-600' : ''}`} style={totalRaised >= goal ? {} : { color: '#428ce4' }}>
                         {isLoadingTotal ? 'Loading...' : `Raised: $${totalRaised.toLocaleString('en-CA', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}
+                        {totalRaised >= goal && <span className="ml-2">✓</span>}
                       </span>
-                      <span className="text-gray-600">
+                      <span className={totalRaised >= goal ? 'text-green-600 font-semibold' : 'text-gray-600'}>
                         Goal: ${goal.toLocaleString('en-CA', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                       </span>
                     </div>
+                    {totalRaised >= goal && (
+                      <div className="mt-2 text-center">
+                        <p className="text-xs sm:text-sm font-semibold text-green-600">
+                          Thank you for helping us reach our goal! 🙏
+                        </p>
+                      </div>
+                    )}
                   </div>
                 </div>
 
@@ -422,10 +430,10 @@ function DonateForm() {
                     Important
                   </h3>
                   <p className="text-xs sm:text-sm text-gray-700 leading-relaxed mb-2">
-                    ⚠️ Please include <strong>"Gospel Conference Donation"</strong> in the notes section of your e-Transfer. 
+                    Please include <strong>"Gospel Conference Donation"</strong> in the notes section of your e-Transfer. 
                   </p>
                   <p className="text-xs sm:text-sm text-gray-700 leading-relaxed mt-3 pt-3 border-t border-gray-300">
-                    📄 A receipt will be issued to your email soon. <br></br> <br></br>
+                    A receipt will be issued to your email soon. <br></br> <br></br>
                     <span className="font-semibold">Thank you for your support.</span>
                   </p>
                 </div>
