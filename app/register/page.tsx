@@ -569,10 +569,18 @@ function RegisterForm() {
                     required
                     className="mt-1 h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
                   />
-                  <span className="text-xs sm:text-sm text-gray-700">
-                    <span className="font-semibold text-red-600">* </span>
-                    I have paid or will pay the registration fee (see payment options below)
-                  </span>
+                  <div className="text-xs sm:text-sm text-gray-700 space-y-1">
+                    <div>
+                      <span className="font-semibold text-red-600">* </span>
+                      I have paid or will pay the registration fee
+                    </div>
+                    <div className="text-gray-600 pl-4">
+                      $100 in January, $120 in February
+                    </div>
+                    <div className="text-gray-500 italic pl-4">
+                      (see payment options below)
+                    </div>
+                  </div>
                 </label>
               </div>
               
