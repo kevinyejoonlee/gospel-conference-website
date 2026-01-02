@@ -596,14 +596,17 @@ function RegisterForm() {
                         className="mt-1 h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300"
                       />
                       <div className="flex-1">
-                        <span className="text-xs sm:text-sm font-semibold text-gray-700 block">
+                        <span className="text-xs sm:text-sm font-semibold text-gray-700 block mb-1">
                           E-Transfer
                         </span>
-                        <span className="text-xs text-gray-600 block mt-0.5">
-                          Send to <span className="font-semibold">sheepgatefellowship@gmail.com</span>
-                          <br />
-                          Please include <span className="font-semibold">"Gospel Conference"</span> in the e-transfer notes.
-                        </span>
+                        <div className="text-xs text-gray-600 space-y-1">
+                          <div>
+                            Send to <span className="font-semibold text-gray-800">sheepgatefellowship@gmail.com</span>
+                          </div>
+                          <div className="text-gray-500 italic">
+                            Please include <span className="font-semibold not-italic">"Gospel Conference"</span> in the e-transfer notes.
+                          </div>
+                        </div>
                       </div>
                     </label>
                     
