@@ -37,45 +37,47 @@ export function Footer() {
     
     setIsSubmitting(true)
 
-    // Create a fresh FormData object with only the fields we need
-    // This ensures no interference from other forms on the page
     const displayName = name.trim() || "Guest"
-    const formData = new FormData()
-    
-    // Add form fields - email must be present and properly named for auto-response to work
-    formData.append('name', displayName)
-    formData.append('email', userEmail) // This field is required for auto-response
-    formData.append('message', message.trim())
-    formData.append('fullName', displayName)
-    
-    // Always set subject as QUESTION with unique timestamp to prevent email threading
-    // Each submission will be a new email, not a reply
-    const timestamp = Date.now()
-    formData.append('_subject', `[QUESTION] - ${displayName} - ${timestamp}`)
-    
-    // FormSubmit configuration
-    formData.append('_captcha', 'false')
-    formData.append('_template', 'table')
-    formData.append('formType', 'QUESTION')
-    
-    // Auto-response email will be sent to the user's email address
-    // FormSubmit automatically sends auto-response to the 'email' field
-    // Make sure 'email' field is added BEFORE _autoresponse for proper recognition
-    formData.append('_autoresponse', `Hi ${displayName},\n\nThank you for reaching out to Gospel Conference! We have received your question and will get back to you as soon as possible.\n\nWe appreciate your interest and look forward to connecting with you.\n\nBlessings,\nThe Gospel Conference Team`)
-    formData.append('_autoresponsesubject', 'Thank you for contacting Gospel Conference!')
-    
-    // Debug: Log to verify email is being sent (remove in production if needed)
-    console.log('Sending form with email:', userEmail)
+    const userMessage = message.trim()
 
     try {
-      // Decode base64 email to prevent scraping
-      const recipientEmail = atob('aGVsbG9AZ29zcGVsY29uZmVyZW5jZS5jYQ==')
-      const response = await fetch(`https://formsubmit.co/${recipientEmail}`, {
-        method: 'POST',
-        body: formData,
-      })
+      // Prepare FormSubmit data - submit directly from client for auto-response to work
+      const formData = new FormData()
+      formData.append('formType', 'QUESTION')
+      formData.append('name', displayName)
+      formData.append('email', userEmail) // Important: field must be named 'email' for auto-response
+      formData.append('message', userMessage)
+      
+      // Add unique timestamp to prevent email threading
+      const timestamp = Date.now()
+      formData.append('_subject', `[QUESTION] - ${displayName} - ${timestamp}`)
+      formData.append('_captcha', 'false')
+      formData.append('_template', 'table')
+      
+      // Auto-response email to the user
+      formData.append('_autoresponse', `Hi ${displayName},\n\nThank you for reaching out to Gospel Conference! We have received your question and will get back to you as soon as possible.\n\nWe appreciate your interest and look forward to connecting with you.\n\nBlessings,\nThe Gospel Conference Team\n\n---\nThis is an automated response. If you have any urgent questions, please contact us directly at hello@gospelconference.ca`)
+      formData.append('_autoresponsesubject', 'Thank you for contacting Gospel Conference!')
+      formData.append('_next', 'https://gospelconference.ca') // Prevents redirect
+      formData.append('_cc', userEmail) // Ensures auto-response is sent
+      
+      // Set reply-to so admin can reply directly
+      formData.append('_replyto', userEmail)
 
-      if (response.ok) {
+      // Decode base64 email to prevent scraping (same as other forms)
+      const recipientEmail = atob('aGVsbG9AZ29zcGVsY29uZmVyZW5jZS5jYQ==')
+      
+      // Submit directly to FormSubmit from client (required for auto-response to work)
+      let emailResponse: Response | null = null
+      try {
+        emailResponse = await fetch(`https://formsubmit.co/${recipientEmail}`, {
+          method: 'POST',
+          body: formData,
+        })
+      } catch (emailError) {
+        console.error('Error sending email:', emailError)
+      }
+
+      if (emailResponse && emailResponse.ok) {
         // Reset form on success
         setName("")
         setEmail("")
@@ -84,17 +86,14 @@ export function Footer() {
         // Reset submitted state after showing message
         setTimeout(() => setSubmitted(false), 5000)
       } else {
-        // Try to get error details from response
-        let errorMessage = 'There was an error sending your message. Please try again.'
-        try {
-          const errorData = await response.text()
-          if (errorData) {
-            console.error('FormSubmit error response:', errorData)
-          }
-        } catch (e) {
-          // Ignore JSON parse errors
+        // Handle error response
+        if (!emailResponse) {
+          setFormError('Network error: Please check your internet connection and try again.')
+          console.error('FormSubmit error: No response received (network error)')
+        } else {
+          setFormError('There was an error sending your message. Please try again.')
+          console.error('FormSubmit error:', emailResponse.status, emailResponse.statusText)
         }
-        setFormError(errorMessage)
       }
     } catch (error) {
       console.error('Error submitting form:', error)
@@ -143,24 +142,6 @@ export function Footer() {
                 onSubmit={handleSubmit}
                 className="space-y-4 sm:space-y-6"
               >
-              {/* Hidden fields for FormSubmit */}
-              <input type="hidden" name="_captcha" value="false" />
-              <input type="hidden" name="_template" value="table" />
-              <input type="hidden" name="formType" value="QUESTION" />
-              <input 
-                type="hidden" 
-                name="_autoresponse" 
-                value="Thank you for contacting Gospel Conference! We have received your message and will get back to you as soon as possible. We appreciate your interest and look forward to connecting with you." 
-              />
-              <input type="hidden" name="_autoresponsesubject" value="Thank you for contacting Gospel Conference!" />
-              <input 
-                type="hidden" 
-                name="fullName" 
-                value={name.trim()} 
-              />
-              
-              {/* Honeypot field for spam protection - hidden from users */}
-              <input type="text" name="_gotcha" style={{ display: 'none' }} tabIndex={-1} autoComplete="off" />
               
               <div>
                 <label htmlFor="name" className="block text-xs sm:text-sm mb-2 text-white">

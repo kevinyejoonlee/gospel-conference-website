@@ -74,3 +74,4 @@ The fundamental issue is that Cloudflare Pages doesn't fully support Next.js run
 - Using the Cloudflare adapter (Option 1)
 - Switching to Vercel (Option 2) - easiest and most reliable for Next.js
 
+

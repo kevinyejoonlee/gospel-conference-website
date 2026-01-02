@@ -276,6 +276,8 @@ function RegisterForm() {
               value="Thank you for registering for Gospel Conference 2026! We have received your registration and will be in contact with you soon. A receipt will be issued to your email upon confirmation. We look forward to seeing you at the conference!" 
             />
             <input type="hidden" name="_autoresponsesubject" value="Thank you for registering for Gospel Conference 2026!" />
+            <input type="hidden" name="_next" value="https://gospelconference.ca/register" />
+            <input type="hidden" name="_cc" value={email} />
             <input 
               type="hidden" 
               name="fullName" 

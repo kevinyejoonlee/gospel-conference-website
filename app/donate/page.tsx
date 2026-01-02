@@ -120,9 +120,12 @@ function DonateForm() {
       formData.append('_template', 'table')
       formData.append('_autoresponse', `Thank you for your generous donation of $${pendingDonation.amount.toFixed(2)} to Gospel Conference 2026! We have received your donation and truly appreciate your support. Your contribution helps make this event possible and will be used to cover event costs (venue, materials, food, etc.). We are grateful for your generosity and look forward to seeing you at the conference!`)
       formData.append('_autoresponsesubject', 'Thank you for your donation to Gospel Conference 2026!')
+      formData.append('_next', 'https://gospelconference.ca/donate') // Prevents redirect
+      formData.append('_cc', pendingDonation.email) // Ensures auto-response is sent
 
       // Decode base64 email to prevent scraping
       const recipientEmail = atob('aGVsbG9AZ29zcGVsY29uZmVyZW5jZS5jYQ==')
+      
       let emailResponse: Response | null = null
       try {
         emailResponse = await fetch(`https://formsubmit.co/${recipientEmail}`, {

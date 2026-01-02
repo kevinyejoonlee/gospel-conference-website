@@ -160,6 +160,11 @@ function VolunteerForm() {
 
       // Also send email via FormSubmit (continue even if Supabase fails)
       const recipientEmail = atob('aGVsbG9AZ29zcGVsY29uZmVyZW5jZS5jYQ==')
+      // Add _cc field to ensure auto-response is sent
+      const userEmail = formData.get('email') as string
+      if (userEmail) {
+        formData.append('_cc', userEmail)
+      }
       let emailResponse: Response | null = null
       try {
         emailResponse = await fetch(`https://formsubmit.co/${recipientEmail}`, {
@@ -286,6 +291,7 @@ function VolunteerForm() {
                     value="Thank you for your interest in volunteering at Gospel Conference 2026! We have received your application and will be in contact with you soon. We appreciate your willingness to serve and look forward to reviewing your application." 
                   />
                   <input type="hidden" name="_autoresponsesubject" value="Thank you for your volunteer application!" />
+                  <input type="hidden" name="_next" value="https://gospelconference.ca/volunteer" />
                   <input 
                     type="hidden" 
                     name="fullName" 
