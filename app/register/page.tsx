@@ -246,7 +246,7 @@ function RegisterForm() {
         {/* Right: Registration Form Section - Full width on mobile, 67% on desktop */}
         <div className="w-full lg:w-2/3 lg:h-screen bg-[#fffcf3] px-4 sm:px-6 md:px-8 lg:px-10 xl:px-12 pt-6 sm:pt-8 md:pt-12 lg:pt-24 pb-8 sm:pb-10 md:pb-12 lg:pb-4 overflow-y-auto lg:overflow-y-auto" style={{ direction: "rtl" }}>
           <div className="max-w-4xl mx-auto w-full" style={{ direction: "ltr" }}>
-            <h1 className="text-lg sm:text-xl md:text-2xl lg:text-2xl xl:text-3xl font-bold mt-4 lg:mt-8 mb-2 sm:mb-2 md:mb-3 lg:mb-3 uppercase leading-tight px-2 sm:px-0" style={{ color: '#428ce4', fontFamily: 'var(--font-spartan-font), sans-serif' }}>
+            <h1 className="text-lg sm:text-xl md:text-2xl lg:text-2xl xl:text-3xl font-bold mt-4 lg:mt-8 mb-2 sm:mb-2 md:mb-3 lg:mb-4 lg:pb-1 uppercase leading-tight px-2 sm:px-0" style={{ color: '#428ce4', fontFamily: 'var(--font-spartan-font), sans-serif' }}>
               REGISTER FOR GOSPEL CONFERENCE 2026
             </h1>
 
@@ -582,7 +582,8 @@ function RegisterForm() {
                 </label>
               </div>
               
-              <div className="mb-4 border-t border-blue-200 pt-4">
+              {feePaid && (
+                <div className="mb-4 border-t border-blue-200 pt-4">
                 <p className="text-xs sm:text-sm font-semibold text-gray-700 mb-3">
                   Payment Options <span className="text-red-600">*</span> (Please select one):
                 </p>
@@ -661,7 +662,8 @@ function RegisterForm() {
                       </div>
                     </label>
                   </div>
-              </div>
+                </div>
+              )}
               
               <div className="text-xs text-gray-600 leading-relaxed border-t border-blue-200 pt-3">
                 <p className="font-semibold text-gray-700 mb-1">Non-Profit Disclaimer:</p>
