@@ -471,6 +471,12 @@ function DonateForm() {
               <AlertDialogDescription className="text-sm text-gray-600 pt-2">
                 Please review your donation details. Once confirmed, your pledge will be recorded and you'll receive e-Transfer instructions.
               </AlertDialogDescription>
+              <div className="text-xs text-gray-600 leading-relaxed pt-4 mt-4 border-t border-gray-200">
+                <p className="font-semibold text-gray-700 mb-1">Non-Profit Disclaimer:</p>
+                <p>
+                  Gospel Conference and Sheepgate Fellowship are non-profit organizations. All registration fees and donations are used solely to cover event costs (venue, materials, food, etc.) and are not used for profit or personal gain. All funds are managed transparently and used exclusively for the purpose of organizing and running Gospel Conference.
+                </p>
+              </div>
             </div>
           </AlertDialogHeader>
           <AlertDialogFooter className="flex-col sm:flex-row gap-2">
