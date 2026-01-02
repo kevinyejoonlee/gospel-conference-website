@@ -572,14 +572,12 @@ function RegisterForm() {
                   <div className="text-xs sm:text-sm text-gray-700 space-y-1">
                     <div>
                       <span className="font-semibold text-red-600">* </span>
-                      I have paid or will pay the registration fee
+                      I have paid or will pay the registration fee.
                     </div>
                     <div className="text-gray-600 pl-4">
                       $100 in January, $120 in February
                     </div>
-                    <div className="text-gray-500 italic pl-4">
-                      (see payment options below)
-                    </div>
+                  
                   </div>
                 </label>
               </div>
