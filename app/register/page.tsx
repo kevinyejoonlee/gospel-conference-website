@@ -584,11 +584,10 @@ function RegisterForm() {
                 </label>
               </div>
               
-              {feePaid && (
-                <div className="mb-4 border-t border-blue-200 pt-4 transition-all duration-300 ease-in-out">
-                  <p className="text-xs sm:text-sm font-semibold text-gray-700 mb-3">
-                    Payment Options <span className="text-red-600">*</span> (Please select one):
-                  </p>
+              <div className="mb-4 border-t border-blue-200 pt-4">
+                <p className="text-xs sm:text-sm font-semibold text-gray-700 mb-3">
+                  Payment Options <span className="text-red-600">*</span> (Please select one):
+                </p>
                   <div className="space-y-3">
                     <label className="flex items-start gap-3 cursor-pointer group hover:bg-blue-100/50 rounded-lg p-2 -m-2 transition-colors">
                       <input
@@ -664,8 +663,7 @@ function RegisterForm() {
                       </div>
                     </label>
                   </div>
-                </div>
-              )}
+              </div>
               
               <div className="text-xs text-gray-600 leading-relaxed border-t border-blue-200 pt-3">
                 <p className="font-semibold text-gray-700 mb-1">Non-Profit Disclaimer:</p>
