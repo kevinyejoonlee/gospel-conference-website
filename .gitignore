@@ -39,6 +39,14 @@ next-env.d.ts
 *.zip
 public/OneDrive_*.zip
 
+# Security-sensitive files
+supabase-*.sql
+CLOUDFLARE_FIX.md
+CLOUDFLARE_SETUP.md
+SUPABASE_SETUP.md
+public/_headers
+
+
 
 
 
