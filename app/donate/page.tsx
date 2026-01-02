@@ -422,7 +422,7 @@ function DonateForm() {
                     Important
                   </h3>
                   <p className="text-xs sm:text-sm text-gray-700 leading-relaxed mb-2">
-                    ⚠️ Please include <strong>"Gospel Conference"</strong> in the notes section of your e-Transfer. 
+                    ⚠️ Please include <strong>"Gospel Conference Donation"</strong> in the notes section of your e-Transfer. 
                   </p>
                   <p className="text-xs sm:text-sm text-gray-700 leading-relaxed mt-3 pt-3 border-t border-gray-300">
                     📄 A receipt will be issued to your email soon. <br></br> <br></br>
