@@ -31,7 +31,7 @@ function DonateForm() {
   const goal = 3000
   const progressPercentage = (totalRaised / goal) * 100
 
-  const predefinedAmounts = [5, 10, 20, 50, 100, 500]
+  const predefinedAmounts = [25, 50, 100, 150, 200, 500]
   const email = "sheepgatefellowship@gmail.com"
 
   // Fetch total donations on mount
