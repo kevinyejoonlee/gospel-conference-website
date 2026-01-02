@@ -585,7 +585,7 @@ function RegisterForm() {
               </div>
               
               {feePaid && (
-                <div className="mb-4 border-t border-blue-200 pt-4">
+                <div className="mb-4 border-t border-blue-200 pt-4 transition-all duration-300 ease-in-out">
                   <p className="text-xs sm:text-sm font-semibold text-gray-700 mb-3">
                     Payment Options <span className="text-red-600">*</span> (Please select one):
                   </p>
