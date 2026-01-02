@@ -246,9 +246,9 @@ function RegisterForm() {
         {/* Right: Registration Form Section - Full width on mobile, 67% on desktop */}
         <div className="w-full lg:w-2/3 lg:h-screen bg-[#fffcf3] px-4 sm:px-6 md:px-8 lg:px-10 xl:px-12 pt-6 sm:pt-8 md:pt-12 lg:pt-24 pb-8 sm:pb-10 md:pb-12 lg:pb-4 overflow-y-auto lg:overflow-y-auto" style={{ direction: "rtl" }}>
           <div className="max-w-4xl mx-auto w-full" style={{ direction: "ltr" }}>
-            <h1 className="text-lg sm:text-xl md:text-2xl lg:text-2xl xl:text-3xl font-bold mt-4 lg:mt-8 mb-2 sm:mb-2 md:mb-3 lg:mb-4 lg:pb-1 uppercase leading-tight px-2 sm:px-0" style={{ color: '#428ce4', fontFamily: 'var(--font-spartan-font), sans-serif' }}>
-              REGISTER FOR GOSPEL CONFERENCE 2026
-            </h1>
+             <h1 className="text-lg sm:text-xl md:text-2xl lg:text-2xl xl:text-3xl font-bold mt-4 lg:mt-8 mb-3 sm:mb-3 md:mb-4 lg:mb-4 uppercase leading-tight px-2 sm:px-0" style={{ color: '#428ce4', fontFamily: 'var(--font-spartan-font), sans-serif' }}>
+                REGISTER FOR GOSPEL CONFERENCE 2026
+              </h1>
 
             {submitted ? (
               <div className="bg-white rounded-lg p-8 text-center">
