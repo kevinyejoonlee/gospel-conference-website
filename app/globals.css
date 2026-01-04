@@ -202,6 +202,75 @@ body {
   scrollbar-color: rgba(255, 255, 255, 0.3) rgba(32, 47, 90, 0.3);
 }
 
+/* Ensure SVG logos render smoothly on all devices, especially mobile */
+/* SVGs should use smooth rendering, not crisp-edges (which is for pixel art) */
+img[src$=".svg"],
+img[src*="logo"] {
+  /* Use auto for smooth rendering on all displays */
+  image-rendering: auto;
+  /* Font smoothing helps with text in SVGs */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  /* Prevent subpixel rendering issues on mobile */
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  /* Force GPU acceleration for smoother rendering */
+  transform: translate3d(0, 0, 0);
+  -webkit-transform: translate3d(0, 0, 0);
+  /* Prevent blurry scaling on mobile Safari */
+  -webkit-transform-style: preserve-3d;
+  transform-style: preserve-3d;
+  /* Ensure proper scaling on mobile */
+  max-width: 100%;
+  height: auto;
+}
+
+/* Mobile-specific fixes for real devices */
+@media screen and (max-width: 768px) {
+  img[src$=".svg"],
+  img[src*="logo"] {
+    /* Force smooth rendering on mobile */
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: auto;
+    /* Additional Safari/iOS fixes */
+    -webkit-transform: translateZ(0) scale(1);
+    transform: translateZ(0) scale(1);
+    /* Prevent pixelation from scaling */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    /* Ensure crisp rendering on mobile */
+    will-change: transform;
+  }
+}
+
+/* Additional fix for high-DPI mobile displays (Retina, etc.) */
+/* On high-DPI displays, ensure smooth rendering is maintained */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  img[src$=".svg"],
+  img[src*="logo"] {
+    /* Keep auto for smooth rendering even on high-DPI */
+    image-rendering: auto;
+    /* Enhanced smoothing for high-DPI displays */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    /* Prevent blur on high-DPI */
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+  }
+}
+
+/* iOS Safari specific fixes */
+@supports (-webkit-touch-callout: none) {
+  img[src$=".svg"],
+  img[src*="logo"] {
+    /* iOS Safari specific rendering fix */
+    -webkit-transform: translate3d(0, 0, 0) scale(1);
+    transform: translate3d(0, 0, 0) scale(1);
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: auto;
+  }
+}
+
 /* Prevent auto-zoom on mobile when focusing form fields */
 /* iOS Safari zooms in when input font-size is less than 16px */
 /* This applies to all mobile devices to prevent unwanted zoom behavior */

@@ -33,7 +33,20 @@ export default function Hero() {
               {/* Conference Year with Logo */}
               <div className="mb-8 sm:mb-10 md:mb-16 mt-[15%] md:mt-[2%]">
                 <p className="text-xs sm:text-sm md:text-base text-white mb-0 tracking-wider flex items-center justify-center gap-2">
-                  <img src="/logo-hero.svg" alt="Gospel Conference Logo" className="h-5 sm:h-6 md:h-9 w-auto" />
+                  <img 
+                    src="/logo-hero.svg" 
+                    alt="Gospel Conference Logo" 
+                    className="h-5 sm:h-6 md:h-9 w-auto" 
+                    style={{ 
+                      imageRendering: 'auto',
+                      WebkitFontSmoothing: 'antialiased',
+                      MozOsxFontSmoothing: 'grayscale',
+                      transform: 'translate3d(0, 0, 0)',
+                      backfaceVisibility: 'hidden',
+                      WebkitBackfaceVisibility: 'hidden'
+                    }}
+                    loading="eager"
+                  />
               </p>
             </div>
 

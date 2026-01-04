@@ -24,7 +24,15 @@ export function Navbar() {
               src="/logo-navbar.svg" 
               alt="Gospel Conference Logo" 
               className="h-7 sm:h-8 md:h-9 w-auto" 
-              style={{ imageRendering: 'crisp-edges' }}
+              style={{ 
+                imageRendering: 'auto',
+                WebkitFontSmoothing: 'antialiased',
+                MozOsxFontSmoothing: 'grayscale',
+                transform: 'translate3d(0, 0, 0)',
+                backfaceVisibility: 'hidden',
+                WebkitBackfaceVisibility: 'hidden'
+              }}
+              loading="eager"
             />
           </Link>
           {/* Desktop Menu */}
