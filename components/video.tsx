@@ -23,6 +23,7 @@ export default function Video() {
   const [isVideoOpen, setIsVideoOpen] = useState(false)
   const [isBuffering, setIsBuffering] = useState(false)
   const [countdown, setCountdown] = useState(9)
+  const [showMobileTapToPlay, setShowMobileTapToPlay] = useState(false)
   const sectionRef = useRef<HTMLElement>(null)
   const playerRef = useRef<any>(null)
   const preloadPlayerRef = useRef<any>(null)
@@ -162,11 +163,25 @@ export default function Video() {
     }
   }, [isVideoOpen])
 
+  // Handle mobile tap to play
+  const handleMobileTapToPlay = () => {
+    if (playerRef.current) {
+      try {
+        hasUserClickedPlay.current = true
+        setShowMobileTapToPlay(false)
+        playerRef.current.playVideo()
+      } catch (e) {
+        console.log('Error playing video:', e)
+      }
+    }
+  }
+
   // Load YouTube IFrame API and set highest quality
   useEffect(() => {
     if (!isVideoOpen) {
       setIsBuffering(true)
       setCountdown(9)
+      setShowMobileTapToPlay(false)
       hasUserClickedPlay.current = false
       // Stop and destroy player when modal closes
       if (playerRef.current) {
@@ -184,29 +199,21 @@ export default function Video() {
     
     const isMobile = isMobileRef.current
     
-    // On mobile: skip buffering countdown, play immediately
-    // On desktop: use buffering countdown for high quality preload
-    if (isMobile) {
-      setIsBuffering(false)
-      setCountdown(0)
-      hasUserClickedPlay.current = true
-    } else {
-      // Start countdown timer for desktop only
-      setIsBuffering(true)
-      setCountdown(9)
-      countdownIntervalRef.current = setInterval(() => {
-        setCountdown((prev) => {
-          if (prev <= 1) {
-            if (countdownIntervalRef.current) {
-              clearInterval(countdownIntervalRef.current)
-              countdownIntervalRef.current = null
-            }
-            return 0
+    // Always show countdown on all devices
+    setIsBuffering(true)
+    setCountdown(9)
+    countdownIntervalRef.current = setInterval(() => {
+      setCountdown((prev) => {
+        if (prev <= 1) {
+          if (countdownIntervalRef.current) {
+            clearInterval(countdownIntervalRef.current)
+            countdownIntervalRef.current = null
           }
-          return prev - 1
-        })
-      }, 1000)
-    }
+          return 0
+        }
+        return prev - 1
+      })
+    }, 1000)
 
     let timeoutId: NodeJS.Timeout
 
@@ -218,7 +225,7 @@ export default function Video() {
         playerRef.current = new window.YT.Player('youtube-player', {
           videoId: youtubeVideoId,
           playerVars: {
-            autoplay: isMobile ? 1 : 0, // Autoplay on mobile (within user gesture), buffer on desktop
+            autoplay: 0, // Don't autoplay - we control playback
             rel: 0,
             modestbranding: 1,
             playsinline: 1, // Critical for iOS - plays inline instead of fullscreen
@@ -257,17 +264,9 @@ export default function Video() {
               // Set quality immediately
               setQuality()
               
-              // Mobile: Play immediately (autoplay should handle it, but ensure it plays)
-              if (isMobile) {
-                try {
-                  event.target.playVideo()
-                } catch (e) {}
-                return
-              }
-              
-              // Desktop: Load the video (cue it, don't play)
+              // Load the video (cue it, don't play)
               try {
-                event.target.cueVideoById(youtubeVideoId, 0, 'hd2160')
+                event.target.cueVideoById(youtubeVideoId, 0, isMobile ? 'hd720' : 'hd2160')
               } catch (e) {
                 try {
                   event.target.cueVideoById(youtubeVideoId, 0)
@@ -276,103 +275,114 @@ export default function Video() {
                 }
               }
               
-              // Start buffering process without playing (desktop only)
+              // Start buffering process
               setTimeout(() => {
                 try {
                   setQuality()
-                  // Start loading/buffering by playing briefly, then immediately pause
-                  event.target.playVideo()
                   
-                  // Immediately pause to let it buffer without playing
+                  // On desktop: try to buffer by playing briefly then pausing
+                  // On mobile: just cue the video (can't buffer without user gesture)
+                  if (!isMobile) {
+                    event.target.playVideo()
+                    setTimeout(() => {
+                      try {
+                        event.target.pauseVideo()
+                      } catch (e) {}
+                    }, 100)
+                    
+                    // Set quality continuously while buffering
+                    const qualityIntervals = [200, 300, 400, 500, 750, 1000, 1500, 2000, 2500, 3000, 3500, 4000, 4500, 5000, 5500, 6000, 7000, 8000, 9000]
+                    qualityIntervals.forEach(delay => {
+                      setTimeout(setQuality, delay)
+                    })
+                  }
+                  
+                  // After 9 seconds, handle differently for mobile vs desktop
                   setTimeout(() => {
                     try {
-                      event.target.pauseVideo()
-                    } catch (e) {}
-                  }, 100)
-                  
-                  // Set quality continuously while buffering
-                  const qualityIntervals = [200, 300, 400, 500, 750, 1000, 1500, 2000, 2500, 3000, 3500, 4000, 4500, 5000, 5500, 6000, 7000, 8000, 9000]
-                  qualityIntervals.forEach(delay => {
-                    setTimeout(setQuality, delay)
-                  })
-                  
-                  // After 9 seconds of buffering, go fullscreen then auto-play the video
-                  setTimeout(() => {
-                    try {
-                      setQuality() // One final quality check
+                      setQuality()
                       setIsBuffering(false)
                       setCountdown(0)
                       
-                      // Request fullscreen right before playing
-                      const requestFullscreen = () => {
-                        const playerElement = document.getElementById('youtube-player')
-                        if (playerElement) {
-                          try {
-                            const iframe = playerElement.querySelector('iframe')
-                            if (iframe) {
-                              if (iframe.requestFullscreen) {
-                                iframe.requestFullscreen().catch(() => {
-                                  tryFullscreenFallback(playerElement)
-                                })
-                                return
-                              } else if ((iframe as any).webkitRequestFullscreen) {
-                                (iframe as any).webkitRequestFullscreen()
-                                return
-                              } else if ((iframe as any).mozRequestFullScreen) {
-                                (iframe as any).mozRequestFullScreen()
-                                return
-                              } else if ((iframe as any).msRequestFullscreen) {
-                                (iframe as any).msRequestFullscreen()
-                                return
+                      if (isMobile) {
+                        // On mobile: show "Tap to Play" button (requires user gesture)
+                        setShowMobileTapToPlay(true)
+                      } else {
+                        // On desktop: auto-play with fullscreen
+                        const requestFullscreen = () => {
+                          const playerElement = document.getElementById('youtube-player')
+                          if (playerElement) {
+                            try {
+                              const iframe = playerElement.querySelector('iframe')
+                              if (iframe) {
+                                if (iframe.requestFullscreen) {
+                                  iframe.requestFullscreen().catch(() => {
+                                    tryFullscreenFallback(playerElement)
+                                  })
+                                  return
+                                } else if ((iframe as any).webkitRequestFullscreen) {
+                                  (iframe as any).webkitRequestFullscreen()
+                                  return
+                                } else if ((iframe as any).mozRequestFullScreen) {
+                                  (iframe as any).mozRequestFullScreen()
+                                  return
+                                } else if ((iframe as any).msRequestFullscreen) {
+                                  (iframe as any).msRequestFullscreen()
+                                  return
+                                }
                               }
-                            }
-                          } catch (e) {}
-                          
-                          tryFullscreenFallback(playerElement)
+                            } catch (e) {}
+                            
+                            tryFullscreenFallback(playerElement)
+                          }
                         }
-                      }
-                      
-                      const tryFullscreenFallback = (element: HTMLElement) => {
-                        if (element.requestFullscreen) {
-                          element.requestFullscreen().catch(() => {
+                        
+                        const tryFullscreenFallback = (element: HTMLElement) => {
+                          if (element.requestFullscreen) {
+                            element.requestFullscreen().catch(() => {
+                              const modal = element.closest('.video-modal-container')
+                              if (modal && (modal as any).requestFullscreen) {
+                                (modal as any).requestFullscreen().catch(() => {})
+                              }
+                            })
+                          } else if ((element as any).webkitRequestFullscreen) {
+                            (element as any).webkitRequestFullscreen()
+                          } else if ((element as any).mozRequestFullScreen) {
+                            (element as any).mozRequestFullScreen()
+                          } else if ((element as any).msRequestFullscreen) {
+                            (element as any).msRequestFullscreen()
+                          } else {
                             const modal = element.closest('.video-modal-container')
-                            if (modal && (modal as any).requestFullscreen) {
-                              (modal as any).requestFullscreen().catch(() => {})
-                            }
-                          })
-                        } else if ((element as any).webkitRequestFullscreen) {
-                          (element as any).webkitRequestFullscreen()
-                        } else if ((element as any).mozRequestFullScreen) {
-                          (element as any).mozRequestFullScreen()
-                        } else if ((element as any).msRequestFullscreen) {
-                          (element as any).msRequestFullscreen()
-                        } else {
-                          const modal = element.closest('.video-modal-container')
-                          if (modal) {
-                            if ((modal as any).requestFullscreen) {
-                              (modal as any).requestFullscreen().catch(() => {})
-                            } else if ((modal as any).webkitRequestFullscreen) {
-                              (modal as any).webkitRequestFullscreen()
-                            } else if ((modal as any).mozRequestFullScreen) {
-                              (modal as any).mozRequestFullScreen()
-                            } else if ((modal as any).msRequestFullscreen) {
-                              (modal as any).msRequestFullscreen()
+                            if (modal) {
+                              if ((modal as any).requestFullscreen) {
+                                (modal as any).requestFullscreen().catch(() => {})
+                              } else if ((modal as any).webkitRequestFullscreen) {
+                                (modal as any).webkitRequestFullscreen()
+                              } else if ((modal as any).mozRequestFullScreen) {
+                                (modal as any).mozRequestFullScreen()
+                              } else if ((modal as any).msRequestFullscreen) {
+                                (modal as any).msRequestFullscreen()
+                              }
                             }
                           }
                         }
+                        
+                        requestFullscreen()
+                        
+                        hasUserClickedPlay.current = true
+                        event.target.playVideo()
                       }
-                      
-                      requestFullscreen()
-                      
-                      hasUserClickedPlay.current = true
-                      event.target.playVideo()
                     } catch (e) {
                       setIsBuffering(false)
                       setCountdown(0)
-                      hasUserClickedPlay.current = true
-                      event.target.playVideo()
+                      if (isMobile) {
+                        setShowMobileTapToPlay(true)
+                      } else {
+                        hasUserClickedPlay.current = true
+                        event.target.playVideo()
+                      }
                     }
-                  }, 9000) // 9 seconds of buffering
+                  }, 9000) // 9 seconds of countdown
                 } catch (e) {
                   setIsBuffering(false)
                   setCountdown(0)
@@ -395,8 +405,13 @@ export default function Video() {
                     }
                   }
                 } catch (e) {}
+                
+                // Hide tap to play if video starts playing
+                if (event.data === window.YT.PlayerState.PLAYING) {
+                  setShowMobileTapToPlay(false)
+                }
               }
-              // Desktop only: If video starts playing without user interaction (before countdown), pause it
+              // If video starts playing without user interaction (before countdown), pause it (desktop only)
               if (!isMobile && event.data === window.YT.PlayerState.PLAYING && !hasUserClickedPlay.current && isBuffering) {
                 try {
                   event.target.pauseVideo()
@@ -547,6 +562,33 @@ export default function Video() {
                       'text-white'
                     }`}>{countdown}</p>
                   </div>
+                </div>
+              </div>
+            )}
+
+            {/* Mobile: Tap to Play button (shown after countdown) */}
+            {showMobileTapToPlay && (
+              <div 
+                className="absolute inset-0 flex items-center justify-center bg-black/60 rounded-lg z-10 cursor-pointer"
+                onClick={handleMobileTapToPlay}
+              >
+                <div className="flex flex-col items-center gap-4">
+                  <div className="relative group/play">
+                    {/* Pulse animation */}
+                    <div className="absolute inset-0 rounded-full bg-white/30 animate-ping"></div>
+                    
+                    {/* Play button */}
+                    <div className="relative bg-white rounded-full p-5 sm:p-6 shadow-2xl transform transition-transform active:scale-95">
+                      <svg 
+                        className="w-10 h-10 sm:w-12 sm:h-12 text-black ml-1" 
+                        fill="currentColor" 
+                        viewBox="0 0 24 24"
+                      >
+                        <path d="M8 5v14l11-7z"/>
+                      </svg>
+                    </div>
+                  </div>
+                  <p className="text-white text-base sm:text-lg font-medium mt-2">Tap to Play</p>
                 </div>
               </div>
             )}
