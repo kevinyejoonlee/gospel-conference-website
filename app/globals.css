@@ -201,3 +201,24 @@ body {
   scrollbar-width: thin;
   scrollbar-color: rgba(255, 255, 255, 0.3) rgba(32, 47, 90, 0.3);
 }
+
+/* Prevent auto-zoom on mobile when focusing form fields */
+/* iOS Safari zooms in when input font-size is less than 16px */
+/* This applies to all mobile devices to prevent unwanted zoom behavior */
+@media screen and (max-width: 1024px) {
+  input[type="text"],
+  input[type="email"],
+  input[type="tel"],
+  input[type="number"],
+  input[type="password"],
+  input[type="date"],
+  input[type="time"],
+  input[type="search"],
+  input[type="url"],
+  input[type="month"],
+  input[type="week"],
+  textarea,
+  select {
+    font-size: 16px !important;
+  }
+}
