@@ -226,20 +226,23 @@ img[src*="logo"] {
 }
 
 /* Mobile-specific fixes for real devices */
+/* The SVGs contain embedded PNGs - try to force better rendering on mobile */
 @media screen and (max-width: 768px) {
   img[src$=".svg"],
   img[src*="logo"] {
-    /* Force smooth rendering on mobile */
-    image-rendering: -webkit-optimize-contrast;
+    /* Use auto for smooth rendering - don't use crisp-edges (makes it worse) */
     image-rendering: auto;
-    /* Additional Safari/iOS fixes */
-    -webkit-transform: translateZ(0) scale(1);
-    transform: translateZ(0) scale(1);
+    /* Force GPU rendering */
+    transform: translateZ(0);
+    -webkit-transform: translateZ(0);
     /* Prevent pixelation from scaling */
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     /* Ensure crisp rendering on mobile */
     will-change: transform;
+    /* Force subpixel rendering off */
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
   }
 }
 
