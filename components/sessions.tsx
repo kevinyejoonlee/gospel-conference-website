@@ -79,6 +79,43 @@ export default function Sessions() {
           </div>
         </div>
 
+        {/* Mobile: Read More Section - Separate block */}
+        <div
+          className="lg:hidden bg-[#A0302A] p-8 sm:p-10 md:p-12 flex flex-col items-center justify-center relative overflow-hidden h-[50vh]"
+          style={{
+            backgroundImage: "url(/read-more-bg.svg)",
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            backgroundRepeat: "no-repeat",
+          }}
+        >
+          <Link href="/about" className="flex flex-col items-center justify-center text-center relative z-10 w-full px-4 group cursor-pointer">
+            <div className="space-y-1 mb-6">
+              <p className="text-2xl sm:text-3xl md:text-4xl font-bold text-[#7BC8FF] tracking-wide uppercase leading-tight break-words group-hover:text-blue-300 transition-colors duration-300">
+                READ MORE
+              </p>
+              <p className="text-2xl sm:text-3xl md:text-4xl font-bold text-white tracking-wide uppercase leading-tight break-words group-hover:text-gray-200 transition-colors duration-300">
+                ABOUT OUR
+              </p>
+              <p className="text-2xl sm:text-3xl md:text-4xl font-bold text-white tracking-wide uppercase leading-tight break-words group-hover:text-gray-200 transition-colors duration-300">
+                2026 THEME
+              </p>
+            </div>
+            {/* Arrow for mobile */}
+            <div className="flex justify-center w-full mt-4">
+              <div className="relative transition-all duration-300 group-hover:translate-x-2 group-hover:scale-110 active:scale-95">
+                {/* Pulsing animation like video - smaller and more subtle */}
+                <div className="absolute inset-[20%] rounded-full bg-white/20 animate-ping opacity-75 -z-10"></div>
+                <img 
+                  src="/read-more-arrow.svg" 
+                  alt="Tap to read more" 
+                  className="w-32 sm:w-40 md:w-48 h-auto object-contain transition-all duration-300 cursor-pointer filter drop-shadow-lg group-hover:drop-shadow-xl group-hover:brightness-110 relative z-10"
+                />
+              </div>
+            </div>
+          </Link>
+        </div>
+
         {/* Desktop: Original two-column layout */}
         <div className="hidden lg:flex lg:col-span-2 bg-[#fffcf3] items-center">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-0 relative w-full">
@@ -134,11 +171,12 @@ export default function Sessions() {
 
         {/* Read More Section - right third with dark red background and shadow (desktop only) */}
         <div
-          className="hidden lg:flex lg:col-span-1 bg-[#A0302A] p-6 sm:p-8 md:p-10 lg:p-12 flex-col items-center justify-center min-h-[400px] sm:min-h-[400px] md:min-h-[350px] lg:h-full relative overflow-hidden"
+          className="hidden lg:flex lg:col-span-1 bg-[#A0302A] p-6 sm:p-8 md:p-10 lg:p-12 flex-col items-center justify-center h-[50vh] relative overflow-hidden"
           style={{
             backgroundImage: "url(/read-more-bg.svg)",
-            backgroundSize: "105vw 100vh",
+            backgroundSize: "105vw 105vh",
             backgroundPosition: "center",
+            backgroundRepeat: "no-repeat",
           }}
         >
          
@@ -162,15 +200,17 @@ export default function Sessions() {
             </div>
             {/* Desktop: Clickable Arrow */}
             <div className="hidden lg:flex justify-center w-full mt-2 md:mt-0.5">
-              <div className="transition-all duration-300 group-hover:translate-x-2 group-hover:scale-110">
-              <img 
-                src="/read-more-arrow.svg" 
-                alt="Arrow" 
-                  className="w-40 xl:w-48 h-auto object-contain transition-transform duration-300"
-                style={{ maxWidth: '240px' }}
-              />
+              <div className="relative transition-all duration-300 group-hover:translate-x-2 group-hover:scale-110">
+                {/* Pulsing animation like video - smaller and more subtle */}
+                <div className="absolute inset-[20%] rounded-full bg-white/20 animate-ping opacity-75 -z-10"></div>
+                <img 
+                  src="/read-more-arrow.svg" 
+                  alt="Click to read more" 
+                  className="w-40 xl:w-48 h-auto object-contain transition-all duration-300 cursor-pointer filter drop-shadow-lg group-hover:drop-shadow-xl group-hover:brightness-110 relative z-10"
+                  style={{ maxWidth: '240px' }}
+                />
+              </div>
             </div>
-          </div>
           </Link>
         </div>
       </div>
