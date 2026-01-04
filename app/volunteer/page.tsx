@@ -350,7 +350,24 @@ function VolunteerForm() {
                         Date of birth (MM/DD/YYYY) <span className="text-red-400">*</span>
                       </label>
                       <Popover>
-                        <div className="relative">
+                        {/* Mobile: Button-style date selector (like register page) */}
+                        <PopoverTrigger asChild>
+                          <button
+                            type="button"
+                            className={cn(
+                              "w-full flex items-center justify-start text-left font-normal px-4 py-3 sm:px-3 sm:py-1.5 lg:px-3 lg:py-1 bg-gray-200 border rounded-md focus:outline-none focus:ring-2 text-sm sm:text-sm font-[var(--font-dm-sans-font)] transition-all shadow-sm hover:shadow-md md:hidden",
+                              dateError 
+                                ? "border-red-500 focus:border-red-500 focus:ring-red-400" 
+                                : "border-0 focus:ring-blue-400",
+                              !dateOfBirth && "text-gray-500"
+                            )}
+                          >
+                            <CalendarIcon className="mr-2 h-4 w-4 shrink-0" />
+                            {dateOfBirth ? format(dateOfBirth, "MM/dd/yyyy") : <span>Pick a date</span>}
+                          </button>
+                        </PopoverTrigger>
+                        {/* Desktop: Text input with calendar icon */}
+                        <div className="hidden md:block relative">
                           <input
                             type="text"
                             name="dateOfBirth"
@@ -390,6 +407,12 @@ function VolunteerForm() {
                           />
                         </PopoverContent>
                       </Popover>
+                      <input
+                        type="hidden"
+                        name="dateOfBirth"
+                        value={dateOfBirth ? format(dateOfBirth, "MM/dd/yyyy") : dateInput}
+                        required
+                      />
                       {dateError && (
                         <p className="text-red-400 text-xs mt-1">{dateError}</p>
                       )}

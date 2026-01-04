@@ -79,6 +79,7 @@ export function PhotoGallery() {
   // Duplicate photos for seamless infinite scroll - fewer on mobile to save memory
   // Use useMemo to prevent recalculation on every render
   const duplicatedPhotos = useMemo(() => {
+    // On mobile, use fewer duplicates and only duplicate once to reduce memory
     return isMobile ? [...photos, ...photos] : [...photos, ...photos, ...photos]
   }, [isMobile])
 
@@ -87,6 +88,10 @@ export function PhotoGallery() {
     if (typeof window === 'undefined') return 33.333
     return window.innerWidth < 768 ? 100 : 33.333 // md breakpoint is 768px
   }, [])
+  
+  // Throttle animation on mobile for better performance
+  const animationThrottleRef = useRef(0)
+  const MOBILE_THROTTLE_FRAMES = 2 // Only update every 2 frames on mobile for better performance
 
   // Detect mobile on mount and resize
   useEffect(() => {
@@ -169,6 +174,16 @@ export function PhotoGallery() {
   useEffect(() => {
     const animate = () => {
       if (scrollRef.current && !isDragging && isReady && maxPositionRef.current > 0) {
+        // Throttle updates on mobile for better performance
+        if (isMobile) {
+          animationThrottleRef.current++
+          if (animationThrottleRef.current < MOBILE_THROTTLE_FRAMES) {
+            animationFrameRef.current = requestAnimationFrame(animate)
+            return
+          }
+          animationThrottleRef.current = 0
+        }
+        
         positionRef.current += baseSpeed * speedMultiplierRef.current
         
         // Reset position when we've scrolled through one set of photos
@@ -192,7 +207,7 @@ export function PhotoGallery() {
         animationFrameRef.current = null
       }
     }
-  }, [isDragging, isReady])
+  }, [isDragging, isReady, isMobile])
 
   // Update position during drag using RAF for smoothness
   const updateDragPosition = useCallback((deltaX: number) => {
@@ -409,10 +424,11 @@ export function PhotoGallery() {
                 fill
                 className="object-cover rounded-lg"
                 sizes="(max-width: 768px) 100vw, 33vw"
-                loading={isMobile ? (index < 3 ? 'eager' : 'lazy') : (index < 9 ? 'eager' : 'lazy')}
+                loading={isMobile ? (index < 2 ? 'eager' : 'lazy') : (index < 9 ? 'eager' : 'lazy')}
                 priority={index < 1}
-                quality={isMobile ? 75 : 90}
+                quality={isMobile ? 70 : 90}
                 draggable={false}
+                unoptimized={false}
               />
             </div>
           ))}
