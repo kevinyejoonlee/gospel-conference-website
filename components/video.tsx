@@ -182,21 +182,31 @@ export default function Video() {
       return
     }
     
-    // Start countdown timer
-    setIsBuffering(true)
-    setCountdown(9)
-    countdownIntervalRef.current = setInterval(() => {
-      setCountdown((prev) => {
-        if (prev <= 1) {
-          if (countdownIntervalRef.current) {
-            clearInterval(countdownIntervalRef.current)
-            countdownIntervalRef.current = null
+    const isMobile = isMobileRef.current
+    
+    // On mobile: skip buffering countdown, play immediately
+    // On desktop: use buffering countdown for high quality preload
+    if (isMobile) {
+      setIsBuffering(false)
+      setCountdown(0)
+      hasUserClickedPlay.current = true
+    } else {
+      // Start countdown timer for desktop only
+      setIsBuffering(true)
+      setCountdown(9)
+      countdownIntervalRef.current = setInterval(() => {
+        setCountdown((prev) => {
+          if (prev <= 1) {
+            if (countdownIntervalRef.current) {
+              clearInterval(countdownIntervalRef.current)
+              countdownIntervalRef.current = null
+            }
+            return 0
           }
-          return 0
-        }
-        return prev - 1
-      })
-    }, 1000)
+          return prev - 1
+        })
+      }, 1000)
+    }
 
     let timeoutId: NodeJS.Timeout
 
@@ -208,29 +218,29 @@ export default function Video() {
         playerRef.current = new window.YT.Player('youtube-player', {
           videoId: youtubeVideoId,
           playerVars: {
-            autoplay: 0, // Don't autoplay immediately - let it buffer at high quality first
+            autoplay: isMobile ? 1 : 0, // Autoplay on mobile (within user gesture), buffer on desktop
             rel: 0,
             modestbranding: 1,
-            playsinline: 1,
-            // Request 4K quality in URL
-            vq: 'hd2160',
-            // Additional quality hints
+            playsinline: 1, // Critical for iOS - plays inline instead of fullscreen
+            // Request high quality (lower for mobile to load faster)
+            vq: isMobile ? 'hd720' : 'hd2160',
             iv_load_policy: 3,
             cc_load_policy: 0,
             enablejsapi: 1
           },
           events: {
             onReady: (event: any) => {
-              // Set playback quality to 4K immediately
+              // Set playback quality
               const setQuality = () => {
                 try {
                   const availableQualities = event.target.getAvailableQualityLevels()
-                  // Prioritize 4K first
-                  const qualityOrder = ['hd2160', 'hd1440', 'hd1080', 'hd720', 'large', 'medium', 'small']
+                  // Mobile: prioritize faster loading qualities; Desktop: prioritize 4K
+                  const qualityOrder = isMobile 
+                    ? ['hd720', 'hd1080', 'large', 'medium', 'hd1440', 'hd2160']
+                    : ['hd2160', 'hd1440', 'hd1080', 'hd720', 'large', 'medium', 'small']
                   for (const quality of qualityOrder) {
                     if (availableQualities.includes(quality)) {
                       event.target.setPlaybackQuality(quality)
-                      // Also try setPlaybackQualityRange if available
                       try {
                         if (event.target.setPlaybackQualityRange) {
                           event.target.setPlaybackQualityRange(quality, quality)
@@ -247,7 +257,15 @@ export default function Video() {
               // Set quality immediately
               setQuality()
               
-              // Load the video (cue it, don't play)
+              // Mobile: Play immediately (autoplay should handle it, but ensure it plays)
+              if (isMobile) {
+                try {
+                  event.target.playVideo()
+                } catch (e) {}
+                return
+              }
+              
+              // Desktop: Load the video (cue it, don't play)
               try {
                 event.target.cueVideoById(youtubeVideoId, 0, 'hd2160')
               } catch (e) {
@@ -258,7 +276,7 @@ export default function Video() {
                 }
               }
               
-              // Start buffering process without playing
+              // Start buffering process without playing (desktop only)
               setTimeout(() => {
                 try {
                   setQuality()
@@ -285,21 +303,13 @@ export default function Video() {
                       setIsBuffering(false)
                       setCountdown(0)
                       
-                      // Request fullscreen right before playing (skip on mobile - fullscreen requires user gesture)
+                      // Request fullscreen right before playing
                       const requestFullscreen = () => {
-                        // Skip fullscreen on mobile devices
-                        if (isMobileRef.current) {
-                          return
-                        }
-                        
                         const playerElement = document.getElementById('youtube-player')
                         if (playerElement) {
-                          // Try YouTube Player API fullscreen first (if available)
                           try {
-                            // Try to get the iframe inside the player element
                             const iframe = playerElement.querySelector('iframe')
                             if (iframe) {
-                              // Try to make the iframe fullscreen
                               if (iframe.requestFullscreen) {
                                 iframe.requestFullscreen().catch(() => {
                                   tryFullscreenFallback(playerElement)
@@ -318,7 +328,6 @@ export default function Video() {
                             }
                           } catch (e) {}
                           
-                          // Fallback: try player element itself
                           tryFullscreenFallback(playerElement)
                         }
                       }
@@ -326,7 +335,6 @@ export default function Video() {
                       const tryFullscreenFallback = (element: HTMLElement) => {
                         if (element.requestFullscreen) {
                           element.requestFullscreen().catch(() => {
-                            // Try modal container as last resort
                             const modal = element.closest('.video-modal-container')
                             if (modal && (modal as any).requestFullscreen) {
                               (modal as any).requestFullscreen().catch(() => {})
@@ -339,7 +347,6 @@ export default function Video() {
                         } else if ((element as any).msRequestFullscreen) {
                           (element as any).msRequestFullscreen()
                         } else {
-                          // Last resort: modal container
                           const modal = element.closest('.video-modal-container')
                           if (modal) {
                             if ((modal as any).requestFullscreen) {
@@ -355,11 +362,8 @@ export default function Video() {
                         }
                       }
                       
-                      // Request fullscreen immediately, then play right after (skipped on mobile)
                       requestFullscreen()
                       
-                      // Play video immediately after fullscreen request (browser will handle the timing)
-                      // On mobile, video will play inline
                       hasUserClickedPlay.current = true
                       event.target.playVideo()
                     } catch (e) {
@@ -381,7 +385,9 @@ export default function Video() {
                   event.data === window.YT.PlayerState.BUFFERING) {
                 try {
                   const availableQualities = event.target.getAvailableQualityLevels()
-                  const qualityOrder = ['hd2160', 'hd1440', 'hd1080', 'hd720', 'large', 'medium', 'small']
+                  const qualityOrder = isMobile 
+                    ? ['hd720', 'hd1080', 'large', 'medium']
+                    : ['hd2160', 'hd1440', 'hd1080', 'hd720', 'large', 'medium', 'small']
                   for (const quality of qualityOrder) {
                     if (availableQualities.includes(quality)) {
                       event.target.setPlaybackQuality(quality)
@@ -390,9 +396,8 @@ export default function Video() {
                   }
                 } catch (e) {}
               }
-              // If video starts playing without user interaction (before countdown), pause it
-              // Only allow playing if countdown is done (hasUserClickedPlay is true) or if modal is open
-              if (event.data === window.YT.PlayerState.PLAYING && !hasUserClickedPlay.current && isBuffering) {
+              // Desktop only: If video starts playing without user interaction (before countdown), pause it
+              if (!isMobile && event.data === window.YT.PlayerState.PLAYING && !hasUserClickedPlay.current && isBuffering) {
                 try {
                   event.target.pauseVideo()
                 } catch (e) {}
