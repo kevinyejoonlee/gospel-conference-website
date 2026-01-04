@@ -33,7 +33,7 @@ export default function Sessions() {
       <div className="pointer-events-none absolute inset-x-0 top-0 h-16 bg-gradient-to-b from-black/15 via-black/5 to-transparent z-10" />
       <div className="pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-black/15 via-black/5 to-transparent z-10" />
       
-      <div className={`relative grid grid-cols-1 lg:grid-cols-3 gap-0 h-full w-full ${isVisible ? 'animate-fade-in-up' : 'opacity-0'}`}>
+      <div className={`relative grid grid-cols-1 lg:grid-cols-3 gap-0 h-full w-full ${isVisible ? 'animate-fade-in-up' : 'opacity-0'}`} style={{ margin: 0, padding: 0 }}>
         {/* Mobile: Centered layout (from about page) */}
         <div className="lg:hidden bg-[#fffcf3] px-6 sm:px-8 md:px-10 py-10 sm:py-12 md:py-16 space-y-8 sm:space-y-10 md:space-y-12 relative overflow-hidden flex flex-col justify-center">
           {/* Main Sessions */}
@@ -80,15 +80,23 @@ export default function Sessions() {
         </div>
 
         {/* Mobile: Read More Section - Separate block */}
-        <div
-          className="lg:hidden bg-[#A0302A] p-8 sm:p-10 md:p-12 flex flex-col items-center justify-center relative overflow-hidden h-[50vh]"
-          style={{
-            backgroundImage: "url(/read-more-bg.svg)",
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-            backgroundRepeat: "no-repeat",
-          }}
-        >
+        <div className="lg:hidden bg-[#A0302A] h-[50vh] relative overflow-hidden">
+          {/* Background image wrapper - extends beyond edges to cover red */}
+          <div
+            className="absolute"
+            style={{
+              top: '-5%',
+              left: '-5%',
+              right: '-5%',
+              bottom: '-5%',
+              backgroundImage: "url(/read-more-bg.svg)",
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+              backgroundRepeat: "no-repeat",
+            }}
+          />
+          {/* Content */}
+          <div className="relative z-10 p-8 sm:p-10 md:p-12 flex flex-col items-center justify-center h-full w-full">
           <Link href="/about" className="flex flex-col items-center justify-center text-center relative z-10 w-full px-4 group cursor-pointer">
             <div className="space-y-1 mb-6">
               <p className="text-2xl sm:text-3xl md:text-4xl font-bold text-[#7BC8FF] tracking-wide uppercase leading-tight break-words group-hover:text-blue-300 transition-colors duration-300">
@@ -114,6 +122,7 @@ export default function Sessions() {
               </div>
             </div>
           </Link>
+          </div>
         </div>
 
         {/* Desktop: Original two-column layout */}
@@ -171,10 +180,10 @@ export default function Sessions() {
 
         {/* Read More Section - right third with dark red background and shadow (desktop only) */}
         <div
-          className="hidden lg:flex lg:col-span-1 bg-[#A0302A] p-6 sm:p-8 md:p-10 lg:p-12 flex-col items-center justify-center h-[50vh] relative overflow-hidden"
+          className="hidden lg:flex lg:col-span-1 bg-[#A0302A] p-6 sm:p-8 md:p-10 lg:p-12 flex-col items-center justify-center lg:h-full relative overflow-hidden"
           style={{
             backgroundImage: "url(/read-more-bg.svg)",
-            backgroundSize: "105vw 105vh",
+            backgroundSize: "cover",
             backgroundPosition: "center",
             backgroundRepeat: "no-repeat",
           }}
