@@ -14,10 +14,11 @@ export function Navbar() {
 
   return (
     <nav
-      className="absolute top-0 w-full z-50 bg-transparent"
+      className="absolute top-0 left-0 right-0 z-50 bg-transparent pointer-events-none"
+      style={{ height: 'auto' }}
     >
-      <div className="max-w-7xl mx-auto py-3 px-4 md:px-6">
-        <div className="flex justify-between items-center">
+      <div className="max-w-7xl mx-auto py-3 px-4 md:px-6 pointer-events-none">
+        <div className="flex justify-between items-center pointer-events-auto">
         <Link href="/" className="flex items-center">
             <img 
               src="/logo-navbar.svg" 
@@ -156,7 +157,7 @@ export function Navbar() {
         {/* Mobile Menu Backdrop */}
         {isMenuOpen && (
           <div
-            className="md:hidden fixed inset-0 top-0 z-40 bg-black/60 backdrop-blur-sm animate-in fade-in duration-300"
+            className="md:hidden fixed inset-0 top-0 z-40 bg-black/60 backdrop-blur-sm animate-in fade-in duration-300 pointer-events-auto"
             onClick={() => setIsMenuOpen(false)}
           />
         )}

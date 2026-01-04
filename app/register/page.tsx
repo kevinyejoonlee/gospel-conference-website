@@ -220,7 +220,7 @@ function RegisterForm() {
       <Navbar />
 
       {/* Main content - responsive container */}
-      <div className="min-h-screen flex flex-col lg:flex-row pt-16 lg:pt-0">
+      <div className="min-h-screen flex flex-col lg:flex-row pt-16 lg:pt-0 relative">
         {/* Left: Promotional Poster Section - 33% width with background SVG - Hidden on mobile/tablet */}
         <div 
           className="hidden lg:block w-full lg:w-1/3 h-screen relative shrink-0 overflow-hidden"
@@ -244,8 +244,8 @@ function RegisterForm() {
         </div>
 
         {/* Right: Registration Form Section - Full width on mobile, 67% on desktop */}
-        <div className="w-full lg:w-2/3 lg:h-screen bg-[#fffcf3] px-4 sm:px-6 md:px-8 lg:px-10 xl:px-12 pt-6 sm:pt-8 md:pt-12 lg:pt-24 pb-8 sm:pb-10 md:pb-12 lg:pb-4 overflow-y-auto lg:overflow-y-auto" style={{ direction: "rtl" }}>
-          <div className="max-w-4xl mx-auto w-full" style={{ direction: "ltr" }}>
+        <div className="w-full lg:w-2/3 lg:h-screen bg-[#fffcf3] px-4 sm:px-6 md:px-8 lg:px-10 xl:px-12 pt-6 sm:pt-8 md:pt-12 lg:pt-24 pb-8 sm:pb-10 md:pb-12 lg:pb-4 overflow-y-auto lg:overflow-y-auto relative z-0">
+          <div className="max-w-4xl mx-auto w-full relative z-10">
              <h1 className="text-lg sm:text-xl md:text-2xl lg:text-2xl xl:text-3xl font-bold mt-4 lg:mt-8 mb-3 sm:mb-3 md:mb-4 lg:mb-4 uppercase leading-tight px-2 sm:px-0" style={{ color: '#428ce4', fontFamily: 'var(--font-spartan-font), sans-serif' }}>
                 REGISTER FOR GOSPEL CONFERENCE 2026
               </h1>
@@ -311,8 +311,8 @@ function RegisterForm() {
             <input type="text" name="_gotcha" style={{ display: 'none' }} tabIndex={-1} autoComplete="off" />
             
             {/* Row 1: First, Last, Preferred */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-3 sm:gap-4">
-              <div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-3 sm:gap-4 relative z-10">
+              <div className="relative z-10">
                 <label className="block text-xs sm:text-xs font-semibold text-gray-700 mb-1.5 sm:mb-2 uppercase tracking-wide">First Name <span className="text-red-400">*</span></label>
                 <input
                   type="text"
@@ -320,10 +320,10 @@ function RegisterForm() {
                   value={firstName}
                   onChange={(e) => setFirstName(e.target.value)}
                   required
-                  className="w-full px-3 sm:px-4 py-2 sm:py-2.5 bg-white border border-gray-200 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 text-sm sm:text-base transition-all shadow-sm hover:shadow-md"
+                  className="w-full px-3 sm:px-4 py-2 sm:py-2.5 bg-white border border-gray-200 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 text-sm sm:text-base transition-all shadow-sm hover:shadow-md relative z-10"
                 />
               </div>
-              <div>
+              <div className="relative z-10">
                 <label className="block text-xs sm:text-xs font-semibold text-gray-700 mb-1.5 sm:mb-2 uppercase tracking-wide">Last Name <span className="text-red-400">*</span></label>
                 <input
                   type="text"
@@ -331,15 +331,15 @@ function RegisterForm() {
                   value={lastName}
                   onChange={(e) => setLastName(e.target.value)}
                   required
-                  className="w-full px-3 sm:px-4 py-2 sm:py-2.5 bg-white border border-gray-200 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 text-sm sm:text-base transition-all shadow-sm hover:shadow-md"
+                  className="w-full px-3 sm:px-4 py-2 sm:py-2.5 bg-white border border-gray-200 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 text-sm sm:text-base transition-all shadow-sm hover:shadow-md relative z-10"
                 />
               </div>
-              <div>
+              <div className="relative z-10">
                 <label className="block text-xs sm:text-xs font-semibold text-gray-700 mb-1.5 sm:mb-2 uppercase tracking-wide">Preferred Name</label>
                 <input
                   type="text"
                   name="preferredName"
-                  className="w-full px-3 sm:px-4 py-2 sm:py-2.5 bg-white border border-gray-200 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 text-sm sm:text-base transition-all shadow-sm hover:shadow-md"
+                  className="w-full px-3 sm:px-4 py-2 sm:py-2.5 bg-white border border-gray-200 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 text-sm sm:text-base transition-all shadow-sm hover:shadow-md relative z-10"
                 />
               </div>
             </div>
@@ -355,7 +355,7 @@ function RegisterForm() {
                     <button
                       type="button"
                       className={cn(
-                        "w-full flex items-center justify-start text-left font-normal px-3 sm:px-4 py-2 sm:py-2.5 bg-white border rounded-lg focus:outline-none focus:ring-2 text-sm sm:text-base transition-all shadow-sm hover:shadow-md",
+                        "w-full flex items-center justify-start text-left font-normal px-3 sm:px-4 py-2 sm:py-2.5 bg-white border rounded-lg focus:outline-none focus:ring-2 text-base transition-all shadow-sm hover:shadow-md",
                         dateError 
                           ? "border-red-500 focus:border-red-500 focus:ring-red-500/20" 
                           : "border-gray-200 focus:border-blue-500 focus:ring-blue-500/20",
@@ -422,7 +422,7 @@ function RegisterForm() {
                     if (formError) setFormError("")
                   }}
                   required
-                  className={`w-full px-3 sm:px-4 py-2 sm:py-2.5 bg-white border rounded-lg focus:outline-none focus:ring-2 text-sm sm:text-base transition-all shadow-sm hover:shadow-md ${
+                  className={`w-full px-3 sm:px-4 py-2 sm:py-2.5 bg-white border rounded-lg focus:outline-none focus:ring-2 text-base transition-all shadow-sm hover:shadow-md ${
                     emailError 
                       ? "border-red-500 focus:border-red-500 focus:ring-red-500/20" 
                       : "border-gray-200 focus:border-blue-500 focus:ring-blue-500/20"
@@ -452,7 +452,7 @@ function RegisterForm() {
                 type="text"
                 name="healthCardNumber"
                 required
-                className="w-full px-3 sm:px-4 py-2 sm:py-2.5 bg-white border border-gray-200 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 text-sm sm:text-base transition-all shadow-sm hover:shadow-md"
+                className="w-full px-3 sm:px-4 py-2 sm:py-2.5 bg-white border border-gray-200 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 text-base transition-all shadow-sm hover:shadow-md"
               />
             </div>
 
@@ -463,7 +463,7 @@ function RegisterForm() {
                 type="text"
                 name="church"
                 required
-                className="w-full px-3 sm:px-4 py-2 sm:py-2.5 bg-white border border-gray-200 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 text-sm sm:text-base transition-all shadow-sm hover:shadow-md"
+                className="w-full px-3 sm:px-4 py-2 sm:py-2.5 bg-white border border-gray-200 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 text-base transition-all shadow-sm hover:shadow-md"
               />
             </div>
 
@@ -549,7 +549,7 @@ function RegisterForm() {
               <textarea
                 name="specialNotes"
                 rows={3}
-                className="w-full px-3 sm:px-4 py-2 sm:py-2.5 bg-white border border-gray-200 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 resize-none text-sm sm:text-base transition-all shadow-sm hover:shadow-md"
+                className="w-full px-3 sm:px-4 py-2 sm:py-2.5 bg-white border border-gray-200 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 resize-none text-base transition-all shadow-sm hover:shadow-md"
               />
             </div>
 
