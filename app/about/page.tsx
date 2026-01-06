@@ -216,7 +216,7 @@ export default function About() {
                 <p className="text-gray-700 text-sm sm:text-base">Bible Passage</p>
               </div>
               <div>
-                <p className="font-bold text-black text-base sm:text-lg md:text-xl mb-1.5 leading-tight">3. Christ the true and better <em>Isaiah</em></p>
+                <p className="font-bold text-black text-base sm:text-lg md:text-xl mb-1.5 leading-tight">3. Christ the true and better <em>Isaac</em></p>
                 <p className="text-gray-700 text-sm sm:text-base">Bible Passage</p>
               </div>
               <div>

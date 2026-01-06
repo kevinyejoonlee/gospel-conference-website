@@ -139,7 +139,7 @@ export default function Sessions() {
                 {[
                   { name: "Adam", desc: "Bible Passage" },
                   { name: "Moses", desc: "Bible Passage" },
-                  { name: "Isaiah", desc: "Bible Passage" },
+                  { name: "Isaac", desc: "Bible Passage" },
                   { name: "David", desc: "Bible Passage" },
                 ].map((session, i) => (
                   <li key={i} className="flex gap-2 sm:gap-3 justify-start">

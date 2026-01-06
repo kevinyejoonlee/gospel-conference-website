@@ -28,7 +28,7 @@ function DonateForm() {
   const [totalRaised, setTotalRaised] = useState(0)
   const [isLoadingTotal, setIsLoadingTotal] = useState(true)
   const [formError, setFormError] = useState<string>("")
-  const goal = 3000
+  const goal = 9000
   const progressPercentage = (totalRaised / goal) * 100
 
   const predefinedAmounts = [25, 50, 100, 150, 200, 500]
