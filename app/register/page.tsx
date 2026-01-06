@@ -248,6 +248,10 @@ function RegisterForm() {
           <div className="max-w-4xl mx-auto w-full relative z-10">
              <h1 className="text-lg sm:text-xl md:text-2xl lg:text-2xl xl:text-3xl font-bold mt-4 lg:mt-8 mb-3 sm:mb-3 md:mb-4 lg:mb-4 uppercase leading-tight px-2 sm:px-0" style={{ color: '#428ce4', fontFamily: 'var(--font-spartan-font), sans-serif' }}>
                 REGISTER FOR GOSPEL CONFERENCE 2026
+                <br />
+                <span className="text-xs sm:text-sm md:text-base lg:text-lg xl:text-xl font-normal normal-case text-gray-600">
+                  (Date: March 18-20)
+                </span>
               </h1>
 
             {submitted ? (
