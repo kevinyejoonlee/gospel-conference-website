@@ -220,9 +220,7 @@ img[src*="logo"] {
   /* Prevent blurry scaling on mobile Safari */
   -webkit-transform-style: preserve-3d;
   transform-style: preserve-3d;
-  /* Ensure proper scaling on mobile */
-  max-width: 100%;
-  height: auto;
+  /* Don't override height/width - let Tailwind classes control sizing */
 }
 
 /* Mobile-specific fixes for real devices */
