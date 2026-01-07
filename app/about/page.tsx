@@ -176,7 +176,7 @@ export default function About() {
                   <li className="flex items-start gap-2 sm:gap-3">
                     <span className="font-bold text-blue-400 mt-0.5">a.</span>
                     <span className="leading-relaxed">
-                      To shine a light on the relevance and significance of the Old Testament, particularly in the New Testament and
+                      To shine a light on the relevance and significance of the Old Testament, particularly to the New Testament and
                       to our current lives.
                     </span>
                   </li>

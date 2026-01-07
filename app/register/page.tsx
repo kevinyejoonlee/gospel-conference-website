@@ -544,7 +544,6 @@ function RegisterForm() {
                   <option value="">Select...</option>
                   <option value="yes">Yes</option>
                   <option value="yes_no_post">Yes, but you may not post</option>
-                  <option value="no">No</option>
                 </select>
               </div>
             </div>
