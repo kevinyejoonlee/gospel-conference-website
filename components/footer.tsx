@@ -122,6 +122,8 @@ export function Footer() {
                 src="/footer-logo-alt.svg" 
                 alt="Gospel Conference Logo" 
                 className="h-20 sm:h-24 md:h-28 lg:h-36 xl:h-40 w-auto"
+                width="810"
+                height="810"
                 style={{ 
                   imageRendering: 'auto',
                   WebkitFontSmoothing: 'antialiased',

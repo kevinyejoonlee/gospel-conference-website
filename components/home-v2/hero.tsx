@@ -35,6 +35,8 @@ export default function Hero() {
                   src="/logo-hero.svg" 
                   alt="Gospel Conference Logo" 
                   className="h-5 sm:h-6 md:h-9 w-auto" 
+                  width="313"
+                  height="36"
                   style={{ 
                     imageRendering: 'auto',
                     WebkitFontSmoothing: 'antialiased',

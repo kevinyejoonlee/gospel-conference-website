@@ -24,6 +24,8 @@ export function Navbar() {
               src="/logo-navbar.svg" 
               alt="Gospel Conference Logo" 
               className="h-7 sm:h-8 md:h-9 w-auto" 
+              width="181"
+              height="36"
               style={{ 
                 imageRendering: 'auto',
                 WebkitFontSmoothing: 'antialiased',
