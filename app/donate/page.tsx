@@ -31,7 +31,7 @@ function DonateForm() {
   const goal = 9000
   const progressPercentage = (totalRaised / goal) * 100
 
-  const predefinedAmounts = [25, 50, 100, 150, 200, 500]
+  const predefinedAmounts = [50, 100, 150, 200, 300, 500]
   const email = "sheepgatefellowship@gmail.com"
 
   // Fetch total donations on mount
@@ -211,11 +211,13 @@ function DonateForm() {
         {/* Header Image - Smaller on mobile */}
         <div className="w-full h-[25vh] sm:h-[28vh] md:h-[30vh] lg:h-[33vh] relative overflow-hidden shrink-0">
           <img
-            src="/donate image.svg"
+            src={encodeURI("/donate image.svg")}
             alt="Donation Header"
             className="w-full h-full object-cover"
+            loading="eager"
+            decoding="async"
           />
-          <div className="absolute inset-0 bg-black/20"></div>
+          <div className="absolute inset-0 bg-black/20 pointer-events-none"></div>
         </div>
 
         {/* Donate Sections - Scrollable on mobile, fixed height on desktop */}
