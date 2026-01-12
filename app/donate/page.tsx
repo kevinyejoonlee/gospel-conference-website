@@ -239,7 +239,7 @@ function DonateForm() {
               target.style.opacity = '1';
             }}
           />
-          <div className="absolute inset-0 bg-black/20"></div>
+          <div className="absolute inset-0 bg-black/20 pointer-events-none"></div>
         </div>
 
         {/* Donate Sections - Scrollable on mobile, fixed height on desktop */}
