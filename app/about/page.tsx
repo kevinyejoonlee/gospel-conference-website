@@ -31,7 +31,7 @@ export default function About() {
                 {/* Decorative background circle for mobile */}
                 <div className="hidden lg:block">
                   <img
-                    src={encodeURI("/about image.svg")}
+                    src="/about-image.svg"
                     alt="Gospel Conference Discussion"
                     className="w-full h-auto object-contain border border-white/20 rounded"
                     style={{ 
@@ -56,14 +56,9 @@ export default function About() {
                         complete: target.complete,
                         error: e
                       });
-                      // Try fallback with unencoded path
-                      if (target.src.includes('%20')) {
-                        console.log('Trying fallback: /about image.svg');
-                        target.src = '/about image.svg';
-                      } else {
-                        console.error('Both paths failed, hiding image');
-                        target.style.display = 'none';
-                      }
+                      // Image failed to load
+                      console.error('Image failed to load');
+                      target.style.display = 'none';
                     }}
                     onLoad={(e) => {
                       const target = e.target as HTMLImageElement;
@@ -78,7 +73,7 @@ export default function About() {
                   {/* Image container with circular mask */}
                   <div className="relative rounded-full overflow-hidden border-4 border-white/40 shadow-2xl transform rotate-[-2deg] hover:rotate-0 transition-transform duration-300 bg-gray-800/50">
                     <img
-                      src={encodeURI("/about image.svg")}
+                      src="/about-image.svg"
                       alt="Gospel Conference Discussion"
                       className="w-full h-auto object-cover aspect-square"
                       loading="eager"
@@ -102,14 +97,9 @@ export default function About() {
                         complete: target.complete,
                         error: e
                       });
-                      // Try fallback with unencoded path
-                      if (target.src.includes('%20')) {
-                        console.log('Trying fallback: /about image.svg');
-                        target.src = '/about image.svg';
-                      } else {
-                        console.error('Both paths failed, hiding image');
-                        target.style.display = 'none';
-                      }
+                      // Image failed to load
+                      console.error('Image failed to load');
+                      target.style.display = 'none';
                     }}
                       onLoad={(e) => {
                         const target = e.target as HTMLImageElement;

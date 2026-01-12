@@ -211,7 +211,7 @@ function DonateForm() {
         {/* Header Image - Smaller on mobile */}
         <div className="w-full h-[25vh] sm:h-[28vh] md:h-[30vh] lg:h-[33vh] relative overflow-hidden shrink-0 bg-gray-100">
           <img
-            src={encodeURI("/donate image.svg")}
+            src="/donate-image.svg"
             alt="Donation Header"
             className="w-full h-full object-cover"
             loading="eager"
@@ -234,14 +234,9 @@ function DonateForm() {
                 complete: target.complete,
                 error: e
               });
-              // Try fallback with unencoded path
-              if (target.src.includes('%20')) {
-                console.log('Trying fallback: /donate image.svg');
-                target.src = '/donate image.svg';
-              } else {
-                console.error('Both paths failed, hiding image');
-                target.style.display = 'none';
-              }
+              // Image failed to load
+              console.error('Image failed to load');
+              target.style.display = 'none';
             }}
             onLoad={(e) => {
               const target = e.target as HTMLImageElement;

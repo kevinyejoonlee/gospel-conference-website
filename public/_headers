@@ -11,19 +11,11 @@
   Content-Type: image/svg+xml
   Cache-Control: public, max-age=31536000, immutable
 
-/donate image.svg
+/donate-image.svg
   Content-Type: image/svg+xml
   Cache-Control: public, max-age=31536000, immutable
 
-/about image.svg
-  Content-Type: image/svg+xml
-  Cache-Control: public, max-age=31536000, immutable
-
-/donate%20image.svg
-  Content-Type: image/svg+xml
-  Cache-Control: public, max-age=31536000, immutable
-
-/about%20image.svg
+/about-image.svg
   Content-Type: image/svg+xml
   Cache-Control: public, max-age=31536000, immutable
 
