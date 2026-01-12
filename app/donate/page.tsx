@@ -28,10 +28,10 @@ function DonateForm() {
   const [totalRaised, setTotalRaised] = useState(0)
   const [isLoadingTotal, setIsLoadingTotal] = useState(true)
   const [formError, setFormError] = useState<string>("")
-  const goal = 9000
+  const goal = 8500
   const progressPercentage = (totalRaised / goal) * 100
 
-  const predefinedAmounts = [25, 50, 100, 150, 200, 500]
+  const predefinedAmounts = [50, 100, 150, 200, 300, 500]
   const email = "sheepgatefellowship@gmail.com"
 
   // Fetch total donations on mount
@@ -209,11 +209,35 @@ function DonateForm() {
       {/* Main content container */}
       <div className="flex-1 flex flex-col lg:h-screen">
         {/* Header Image - Smaller on mobile */}
-        <div className="w-full h-[25vh] sm:h-[28vh] md:h-[30vh] lg:h-[33vh] relative overflow-hidden shrink-0">
+        <div className="w-full h-[25vh] sm:h-[28vh] md:h-[30vh] lg:h-[33vh] relative overflow-hidden shrink-0 bg-gray-100">
           <img
-            src="/donate image.svg"
+            src="/donate%20image.svg"
             alt="Donation Header"
             className="w-full h-full object-cover"
+            loading="eager"
+            decoding="async"
+            style={{ 
+              imageRendering: 'auto',
+              WebkitFontSmoothing: 'antialiased',
+              MozOsxFontSmoothing: 'grayscale',
+              transform: 'translate3d(0, 0, 0)',
+              backfaceVisibility: 'hidden',
+              WebkitBackfaceVisibility: 'hidden'
+            }}
+            onError={(e) => {
+              console.error('Failed to load donate image');
+              const target = e.target as HTMLImageElement;
+              // Try fallback with original path
+              if (target.src.includes('%20')) {
+                target.src = '/donate image.svg';
+              } else {
+                target.style.display = 'none';
+              }
+            }}
+            onLoad={(e) => {
+              const target = e.target as HTMLImageElement;
+              target.style.opacity = '1';
+            }}
           />
           <div className="absolute inset-0 bg-black/20"></div>
         </div>

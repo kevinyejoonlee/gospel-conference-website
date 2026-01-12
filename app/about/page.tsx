@@ -31,10 +31,35 @@ export default function About() {
                 {/* Decorative background circle for mobile */}
                 <div className="hidden lg:block">
                   <img
-                    src="/about image.svg"
+                    src="/about%20image.svg"
                     alt="Gospel Conference Discussion"
                     className="w-full h-auto object-contain border border-white/20 rounded"
-                    style={{ maxHeight: '75vh' }}
+                    style={{ 
+                      maxHeight: '75vh',
+                      imageRendering: 'auto',
+                      WebkitFontSmoothing: 'antialiased',
+                      MozOsxFontSmoothing: 'grayscale',
+                      transform: 'translate3d(0, 0, 0)',
+                      backfaceVisibility: 'hidden',
+                      WebkitBackfaceVisibility: 'hidden',
+                      objectPosition: 'center'
+                    }}
+                    loading="eager"
+                    decoding="async"
+                    onError={(e) => {
+                      console.error('Failed to load about image');
+                      const target = e.target as HTMLImageElement;
+                      // Try fallback with original path
+                      if (target.src.includes('%20')) {
+                        target.src = '/about image.svg';
+                      } else {
+                        target.style.display = 'none';
+                      }
+                    }}
+                    onLoad={(e) => {
+                      const target = e.target as HTMLImageElement;
+                      target.style.opacity = '1';
+                    }}
                   />
                 </div>
                 {/* Mobile creative design */}
@@ -42,11 +67,36 @@ export default function About() {
                   {/* Outer glow circle */}
                   <div className="absolute inset-0 rounded-full bg-gradient-to-br from-blue-400/30 via-purple-500/20 to-blue-600/30 blur-xl scale-110"></div>
                   {/* Image container with circular mask */}
-                  <div className="relative rounded-full overflow-hidden border-4 border-white/40 shadow-2xl transform rotate-[-2deg] hover:rotate-0 transition-transform duration-300">
+                  <div className="relative rounded-full overflow-hidden border-4 border-white/40 shadow-2xl transform rotate-[-2deg] hover:rotate-0 transition-transform duration-300 bg-gray-800/50">
                     <img
-                      src="/about image.svg"
+                      src="/about%20image.svg"
                       alt="Gospel Conference Discussion"
                       className="w-full h-auto object-cover aspect-square"
+                      loading="eager"
+                      decoding="async"
+                      style={{ 
+                        imageRendering: 'auto',
+                        WebkitFontSmoothing: 'antialiased',
+                        MozOsxFontSmoothing: 'grayscale',
+                        transform: 'translate3d(0, 0, 0)',
+                        backfaceVisibility: 'hidden',
+                        WebkitBackfaceVisibility: 'hidden',
+                        objectPosition: 'center'
+                      }}
+                      onError={(e) => {
+                        console.error('Failed to load about image on mobile');
+                        const target = e.target as HTMLImageElement;
+                        // Try fallback with original path
+                        if (target.src.includes('%20')) {
+                          target.src = '/about image.svg';
+                        } else {
+                          target.style.display = 'none';
+                        }
+                      }}
+                      onLoad={(e) => {
+                        const target = e.target as HTMLImageElement;
+                        target.style.opacity = '1';
+                      }}
                     />
                   </div>
                   {/* Decorative corner accents */}
