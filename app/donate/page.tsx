@@ -211,7 +211,7 @@ function DonateForm() {
         {/* Header Image - Smaller on mobile */}
         <div className="w-full h-[25vh] sm:h-[28vh] md:h-[30vh] lg:h-[33vh] relative overflow-hidden shrink-0 bg-gray-100">
           <img
-            src="/donate%20image.svg"
+            src="/donate image.svg"
             alt="Donation Header"
             className="w-full h-full object-cover"
             loading="eager"
@@ -227,9 +227,9 @@ function DonateForm() {
             onError={(e) => {
               console.error('Failed to load donate image');
               const target = e.target as HTMLImageElement;
-              // Try fallback with original path
-              if (target.src.includes('%20')) {
-                target.src = '/donate image.svg';
+              // Try fallback with encoded path
+              if (!target.src.includes('%20')) {
+                target.src = encodeURI('/donate image.svg');
               } else {
                 target.style.display = 'none';
               }

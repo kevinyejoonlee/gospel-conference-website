@@ -31,7 +31,7 @@ export default function About() {
                 {/* Decorative background circle for mobile */}
                 <div className="hidden lg:block">
                   <img
-                    src="/about%20image.svg"
+                    src="/about image.svg"
                     alt="Gospel Conference Discussion"
                     className="w-full h-auto object-contain border border-white/20 rounded"
                     style={{ 
@@ -49,9 +49,9 @@ export default function About() {
                     onError={(e) => {
                       console.error('Failed to load about image');
                       const target = e.target as HTMLImageElement;
-                      // Try fallback with original path
-                      if (target.src.includes('%20')) {
-                        target.src = '/about image.svg';
+                      // Try fallback with encoded path
+                      if (!target.src.includes('%20')) {
+                        target.src = encodeURI('/about image.svg');
                       } else {
                         target.style.display = 'none';
                       }
@@ -69,7 +69,7 @@ export default function About() {
                   {/* Image container with circular mask */}
                   <div className="relative rounded-full overflow-hidden border-4 border-white/40 shadow-2xl transform rotate-[-2deg] hover:rotate-0 transition-transform duration-300 bg-gray-800/50">
                     <img
-                      src="/about%20image.svg"
+                      src="/about image.svg"
                       alt="Gospel Conference Discussion"
                       className="w-full h-auto object-cover aspect-square"
                       loading="eager"
@@ -86,9 +86,9 @@ export default function About() {
                       onError={(e) => {
                         console.error('Failed to load about image on mobile');
                         const target = e.target as HTMLImageElement;
-                        // Try fallback with original path
-                        if (target.src.includes('%20')) {
-                          target.src = '/about image.svg';
+                        // Try fallback with encoded path
+                        if (!target.src.includes('%20')) {
+                          target.src = encodeURI('/about image.svg');
                         } else {
                           target.style.display = 'none';
                         }
