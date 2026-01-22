@@ -44,12 +44,17 @@ export default function Speakers() {
               MAIN SPEAKER
             </h3>
             <div 
-              className="w-48 h-48 sm:w-56 sm:h-56 md:w-64 md:h-64 bg-gradient-to-b from-gray-200 to-gray-100 rounded-3xl border-4 sm:border-[6px] border-[#8B2E2E] mb-4 flex items-center justify-center"
+              className="w-48 h-48 sm:w-56 sm:h-56 md:w-64 md:h-64 bg-gradient-to-b from-gray-200 to-gray-100 rounded-3xl border-4 sm:border-[6px] border-[#8B2E2E] mb-4 flex items-center justify-center overflow-hidden"
               style={{ boxShadow: 'inset 0 0 30px rgba(0, 0, 0, 0.3)' }}
             >
-              <span className="text-6xl sm:text-7xl md:text-8xl text-gray-400 font-bold">?</span>
+              <img 
+                src="/sam-song.png" 
+                alt="Sam Song" 
+                className="w-full h-full object-cover scale-125"
+                style={{ objectPosition: 'center top' }}
+              />
             </div>
-            <p className="text-center text-black font-bold mb-1 uppercase text-xl sm:text-2xl md:text-[27px] lg:text-[33px]">TBD</p>
+            <p className="text-center text-black font-bold mb-1 uppercase text-xl sm:text-2xl md:text-[27px] lg:text-[33px]">SAM SONG</p>
             <p className="text-center text-sm sm:text-base md:text-lg text-black">To be determined</p>
           </div>
 

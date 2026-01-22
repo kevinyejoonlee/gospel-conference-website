@@ -183,14 +183,14 @@ export default function About() {
               ABOUT OUR <span className="underline decoration-blue-400 decoration-2 underline-offset-4">2026 THEME</span>
             </h2>
 
-            <div className="space-y-4 sm:space-y-5 md:space-y-6 text-sm sm:text-base md:text-lg leading-relaxed" style={{ fontFamily: 'var(--font-dm-sans-font), sans-serif' }}>
+            <div className="space-y-8 sm:space-y-10 md:space-y-12 text-sm sm:text-base md:text-lg leading-relaxed" style={{ fontFamily: 'var(--font-dm-sans-font), sans-serif' }}>
               <div>
-                <h3 className="text-base sm:text-lg md:text-xl font-bold mb-2 sm:mb-3 uppercase tracking-tight" style={{ fontFamily: 'var(--font-spartan-font), sans-serif' }}>
+                <h3 className="text-base sm:text-lg md:text-xl font-bold mb-1 sm:mb-1.5 uppercase tracking-tight" style={{ fontFamily: 'var(--font-spartan-font), sans-serif' }}>
                   WHAT DOES "CHRIST THE TRUE AND BETTER" MEAN?
                 </h3>
-                <p className="leading-relaxed">
+                <p className="leading-normal">
                   The Old Testament is full of people, places, and stories that were{" "}
-                  <span className="italic">types and shadows</span> pointing to Jesus.
+                  <span className="italic">types and shadows</span> pointing to Jesus.{" "}
                   When we say Jesus is the true and better, we mean that He is the one who perfectly fulfills what these
                   types and shadows pointed to.{" "}
                   <span className="text-blue-400 font-semibold">
@@ -200,24 +200,24 @@ export default function About() {
               </div>
 
               <div>
-                <h3 className="text-base sm:text-lg md:text-xl font-bold mb-2 sm:mb-3 uppercase tracking-tight" style={{ fontFamily: 'var(--font-spartan-font), sans-serif' }}>
+                <h3 className="text-base sm:text-lg md:text-xl font-bold mb-1 sm:mb-1.5 uppercase tracking-tight" style={{ fontFamily: 'var(--font-spartan-font), sans-serif' }}>
                   WHAT IS A TYPE AND SHADOW?
                 </h3>
-                <div className="space-y-2 sm:space-y-3">
-                  <p className="leading-relaxed">
+                <div className="space-y-3 sm:space-y-4">
+                  <p className="leading-normal">
                     <span className="text-blue-400 font-semibold">
                       A type is something or someone in the Old Testament that represents or foreshadows Jesus
                     </span>{" "}
                     — like <em>Adam</em> (who points to Christ as the true man), the Passover lamb (pointing to Jesus as our
                     sacrifice), or the temple (pointing to God's presence with His people).
                   </p>
-                  <p className="leading-relaxed">
+                  <p className="leading-normal">
                     <span className="text-blue-400 font-semibold">
                       A shadow is the outline or hint of the real thing. They show what's coming, but not the full reality
                     </span>{" "}
                     — like the sacrifices and ceremonies of the law were shadows that pointed to Christ's once-for-all sacrifice.
                   </p>
-                  <p className="leading-relaxed">
+                  <p className="leading-normal">
                     <span className="text-blue-400 font-semibold">
                       Figures are symbols or pictures that represent spiritual truths about Christ and His kingdom
                     </span>{" "}
@@ -227,26 +227,26 @@ export default function About() {
               </div>
 
               <div>
-                <h3 className="text-base sm:text-lg md:text-xl font-bold mb-2 sm:mb-3 uppercase tracking-tight" style={{ fontFamily: 'var(--font-spartan-font), sans-serif' }}>
+                <h3 className="text-base sm:text-lg md:text-xl font-bold mb-1 sm:mb-1.5 uppercase tracking-tight" style={{ fontFamily: 'var(--font-spartan-font), sans-serif' }}>
                   WHAT ARE THE GOALS WITH THIS YEAR'S THEME?
                 </h3>
-                <ul className="list-none space-y-2 sm:space-y-2.5 ml-0">
+                <ul className="list-none space-y-3 sm:space-y-3.5 ml-0">
                   <li className="flex items-start gap-2 sm:gap-3">
                     <span className="font-bold text-blue-400 mt-0.5">a.</span>
-                    <span className="leading-relaxed">
+                    <span className="leading-normal">
                       To shine a light on the relevance and significance of the Old Testament, particularly to the New Testament and
                       to our current lives.
                     </span>
                   </li>
                   <li className="flex items-start gap-2 sm:gap-3">
                     <span className="font-bold text-blue-400 mt-0.5">b.</span>
-                    <span className="leading-relaxed">
+                    <span className="leading-normal">
                       To better connect the entire landscape of the gospel, highlighting the majesty of God's authorship.
                     </span>
                   </li>
                   <li className="flex items-start gap-2 sm:gap-3">
                     <span className="font-bold text-blue-400 mt-0.5">c.</span>
-                    <span className="leading-relaxed">
+                    <span className="leading-normal">
                       To better lay out the all-too-familiar "Sunday School bible stories" in a Christ-centered and
                       gospel-informed way.
                     </span>
