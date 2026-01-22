@@ -50,7 +50,7 @@ export default function Speakers() {
               <img 
                 src="/sam-song.png" 
                 alt="Sam Song" 
-                className="w-full h-full object-cover scale-125"
+                className="w-full h-full object-cover scale-110"
                 style={{ objectPosition: 'center top' }}
               />
             </div>
