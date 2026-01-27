@@ -27,17 +27,18 @@ export default function Sing() {
   }, [])
 
   return (
-    <section ref={sectionRef} className="relative w-full overflow-hidden min-h-[220px] sm:min-h-[250px] md:min-h-[250px] lg:h-[43.5vh] lg:min-h-0 flex items-center justify-center" style={{ margin: 0, padding: 0 }}>
-      {/* Background with SVG */}
-      <div
-        className="absolute inset-0 bg-no-repeat sing-bg-mobile md:sing-bg-desktop"
-        style={{
-          backgroundImage: "url(/get-read-to-sing-background.svg)",
-          backgroundPosition: "center",
-          backgroundSize: "cover",
-      
-        }}
-      />
+    <div className="sing-fullwidth-wrapper">
+      <section ref={sectionRef} className="relative w-full overflow-hidden min-h-[220px] sm:min-h-[250px] md:min-h-[250px] lg:h-[43.5vh] lg:min-h-0 flex items-center justify-center">
+        {/* Background with SVG */}
+        <div
+          className="absolute inset-0 bg-no-repeat sing-bg-mobile md:sing-bg-desktop"
+          style={{
+            backgroundImage: "url(/get-read-to-sing-background.svg)",
+            backgroundPosition: "center",
+            backgroundSize: "auto 420%",
+        
+          }}
+        />
 
       {/* Content */}
       <div className={`relative z-10 max-w-4xl mx-auto text-center px-4 sm:px-6 py-12 sm:py-14 md:py-16 ${isVisible ? 'animate-fade-in-up' : 'opacity-0'}`}>
@@ -62,23 +63,28 @@ export default function Sing() {
           GOSPEL CONFERENCE 2026 SETLIST
         </a>
       </div>
+      </section>
 
       <style jsx>{`
-        section {
-          margin: 0 !important;
-          padding: 0 !important;
+        .sing-fullwidth-wrapper {
+          width: 100vw;
+          position: relative;
+          left: 50%;
+          right: 50%;
+          margin-left: -50vw;
+          margin-right: -50vw;
         }
         
         .sing-bg-mobile {
-            background-size: auto 420% !important;
+            background-size: auto 500% !important;
         }
         
         @media (min-width: 768px) {
           .sing-bg-desktop {
-            background-size: cover ;
+            background-size: 150% auto !important;
           }
         }
       `}</style>
-    </section>
+    </div>
   )
 }

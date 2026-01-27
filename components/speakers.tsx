@@ -56,7 +56,7 @@ export default function Speakers() {
             </div>
             <p className="text-center text-black font-bold mb-1 uppercase text-lg sm:text-xl md:text-2xl lg:text-[27px]">SAM SONG</p>
             <p className="text-center text-xs sm:text-sm md:text-base text-black px-2 leading-tight min-h-[3rem] sm:min-h-[3.5rem] md:min-h-[4rem] flex items-center justify-center">
-             Comming soon
+             Coming soon
             </p>
           </div>
 
@@ -116,14 +116,14 @@ export default function Speakers() {
               SEMINAR SPEAKER
             </h3>
             <div 
-              className="w-40 h-40 sm:w-48 sm:h-48 md:w-56 md:h-56 lg:w-64 lg:h-64 bg-gradient-to-b from-gray-200 to-gray-100 rounded-3xl border-4 sm:border-[6px] border-[#3182CE] mb-3 sm:mb-4 flex items-center justify-center overflow-hidden"
-              style={{ boxShadow: 'inset 0 0 30px rgba(0, 0, 0, 0.3)' }}
+              className="w-40 h-40 sm:w-48 sm:h-48 md:w-56 md:h-56 lg:w-64 lg:h-64 rounded-3xl border-4 sm:border-[6px] border-[#3182CE] mb-3 sm:mb-4 flex items-center justify-center overflow-hidden"
+              style={{ boxShadow: 'inset 0 0 30px rgba(0, 0, 0, 0.3)', background: 'linear-gradient(to right, #82878F 0%, #82878F 70%, #666B71 100%)' }}
             >
               <img 
                 src="/max.png" 
                 alt="Max" 
                 className="w-full h-full object-cover"
-                style={{ objectPosition: 'center center' }}
+                style={{ objectPosition: 'center 50%', transform: 'translateY(15%) scale(1.25)' }}
               />
             </div>
             <p className="text-center text-black font-bold mb-1 uppercase text-lg sm:text-xl md:text-2xl lg:text-[27px]">MAX PARK</p>
