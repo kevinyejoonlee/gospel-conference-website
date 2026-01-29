@@ -10,8 +10,12 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { cn } from "@/lib/utils"
 
 function RegisterForm() {
+  type RegistrationType = "student" | "leader"
+
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitted, setSubmitted] = useState(false)
+  const [submittedRegistrationType, setSubmittedRegistrationType] = useState<RegistrationType | null>(null)
+  const [registrationType, setRegistrationType] = useState<RegistrationType>("student")
   const [dateOfBirth, setDateOfBirth] = useState<Date | undefined>(undefined)
   const [dateError, setDateError] = useState<string>("")
   const [firstName, setFirstName] = useState("")
@@ -43,6 +47,55 @@ function RegisterForm() {
     // Basic email validation - must contain @ and at least one character before and after
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
     return emailRegex.test(email)
+  }
+
+  const handleLeaderSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    setFormError("")
+
+    // Validate email
+    if (!email || !validateEmail(email)) {
+      setEmailError("Please enter a valid email address")
+      setFormError("Please enter a valid email address")
+      setIsSubmitting(false)
+      return
+    } else {
+      setEmailError("")
+    }
+
+    setIsSubmitting(true)
+
+    const form = e.currentTarget
+    const formData = new FormData(form)
+
+    // Add unique timestamp to subject to prevent email threading - each submission is a new email
+    const timestamp = Date.now()
+    const currentSubject = (formData.get("_subject") as string) || ""
+    if (currentSubject) {
+      const baseSubject = currentSubject.split(" - ").slice(0, 2).join(" - ")
+      formData.set("_subject", `${baseSubject} - ${timestamp}`)
+    }
+
+    try {
+      // Send email via FormSubmit
+      const recipientEmail = atob("aGVsbG9AZ29zcGVsY29uZmVyZW5jZS5jYQ==")
+      const emailResponse = await fetch(`https://formsubmit.co/${recipientEmail}`, {
+        method: "POST",
+        body: formData,
+      })
+
+      if (emailResponse.ok) {
+        setSubmittedRegistrationType("leader")
+        setSubmitted(true)
+      } else {
+        setFormError("There was an error submitting your registration. Please try again.")
+      }
+    } catch (error) {
+      console.error("Error submitting leader form:", error)
+      setFormError("There was an error submitting the form. Please try again.")
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -181,6 +234,7 @@ function RegisterForm() {
 
       // Check if at least one submission succeeded
       if (supabaseResponse.ok || (emailResponse && emailResponse.ok)) {
+        setSubmittedRegistrationType("student")
         setSubmitted(true)
       } else {
         // Both failed - show error
@@ -235,7 +289,7 @@ function RegisterForm() {
           <div className="relative w-full h-full flex items-center justify-center px-6 md:px-8 lg:px-10 z-10">
             <div>
               <img 
-                src="/register poster.svg" 
+                src="/register-poster.svg" 
                 alt="Gospel Conference 2026 Poster" 
                 className="w-full h-auto max-w-full object-contain max-h-[90vh] relative z-10"
               />
@@ -249,22 +303,263 @@ function RegisterForm() {
              <h1 className="text-lg sm:text-xl md:text-2xl lg:text-2xl xl:text-3xl font-bold mt-4 lg:mt-8 mb-3 sm:mb-3 md:mb-4 lg:mb-4 uppercase leading-tight px-2 sm:px-0" style={{ color: '#428ce4', fontFamily: 'var(--font-spartan-font), sans-serif' }}>
                 REGISTER FOR GOSPEL CONFERENCE 2026
                 <br />
-                <span className="text-xs sm:text-sm md:text-base lg:text-lg xl:text-xl font-normal normal-case text-gray-600 block mb-2 sm:mb-3 md:mb-4">
-                  (Date: March 18-20)
-                </span>
               </h1>
 
+            <div className="px-2 sm:px-0 mb-4 sm:mb-5">
+              <label className="block text-xs sm:text-xs font-semibold text-gray-700 mb-1.5 sm:mb-2 uppercase tracking-wide">
+                Registering as <span className="text-red-400">*</span>
+              </label>
+              <select
+                value={registrationType}
+                onChange={(e) => {
+                  const next = e.target.value as RegistrationType
+                  setRegistrationType(next)
+                  setSubmitted(false)
+                  setSubmittedRegistrationType(null)
+                  setFormError("")
+                  setEmailError("")
+                  setDateError("")
+                  setIsSubmitting(false)
+                  if (next === "leader") {
+                    setFeePaid(false)
+                    setPaymentMethod("")
+                    setDateOfBirth(undefined)
+                  }
+                }}
+                className="w-full px-3 sm:px-4 py-2 sm:py-2.5 bg-white border border-gray-200 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 text-sm sm:text-base transition-all shadow-sm hover:shadow-md"
+              >
+                <option value="student">Student</option>
+                <option value="leader">Pastor or adult leader of attendee(s)</option>
+              </select>
+            </div>
+
             {submitted ? (
-              <div className="bg-white rounded-lg p-8 text-center">
-                <h2 className="text-2xl font-bold text-green-600 mb-4">Thank You!</h2>
-                <p className="text-gray-700 mb-4">
-                  Your registration has been submitted successfully. We will be in contact with you soon.
-                </p>
-                <p className="text-sm text-gray-600 font-semibold">
-                  📄 A receipt will be issued to your email upon confirmation. See you soon!
-                  
-                </p>
-              </div>
+              submittedRegistrationType === "leader" ? (
+                <div className="bg-white rounded-lg p-8">
+                  <div className="text-center">
+                    <h2 className="text-2xl font-bold text-green-600 mb-4">Thank You!</h2>
+                    <p className="text-gray-700 mb-6">
+                      Your leader registration has been submitted successfully.
+                    </p>
+                  </div>
+
+                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-5">
+                    <h3 className="text-sm sm:text-base font-bold text-gray-900 mb-2">
+                      Please pay for now
+                    </h3>
+                    <p className="text-sm text-gray-700 mb-3">
+                      Please complete your registration fee payment via e-Transfer.
+                    </p>
+                    <div className="bg-white rounded-lg border border-gray-200 p-4">
+                      <div className="text-xs font-semibold text-gray-700 mb-2 uppercase tracking-wide">
+                        Send e-Transfer to
+                      </div>
+                      <code className="block text-sm font-mono text-gray-900 break-all">
+                        sheepgatefellowship@gmail.com
+                      </code>
+                      <p className="text-xs text-gray-600 mt-3">
+                        Please include <span className="font-semibold">"Gospel Conference Registration - {`${firstName} ${lastName}`.trim() || "Leader"}</span>" in the e-transfer notes.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <div className="bg-white rounded-lg p-8 text-center">
+                  <h2 className="text-2xl font-bold text-green-600 mb-4">Thank You!</h2>
+                  <p className="text-gray-700 mb-4">
+                    Your registration has been submitted successfully. We will be in contact with you soon.
+                  </p>
+                  <p className="text-sm text-gray-600 font-semibold">
+                    📄 A receipt will be issued to your email upon confirmation. See you soon!
+                  </p>
+                </div>
+              )
+            ) : (
+            registrationType === "leader" ? (
+              <form
+                onSubmit={handleLeaderSubmit}
+                className="space-y-3 sm:space-y-4 md:space-y-5 px-2 sm:px-0"
+              >
+                {/* Hidden fields for FormSubmit */}
+                <input type="hidden" name="_captcha" value="false" />
+                <input type="hidden" name="_template" value="table" />
+                <input type="hidden" name="formType" value="LEADER_REGISTRATION" />
+                <input type="hidden" name="registrationType" value="Pastor or adult leader of attendee(s)" />
+                <input
+                  type="hidden"
+                  name="_autoresponse"
+                  value='Thank you for registering as a leader for Gospel Conference 2026! We have received your registration. Please complete your registration fee payment via e-Transfer to sheepgatefellowship@gmail.com. Please include "Gospel Conference Registration - Your Name" in the e-transfer notes. We will be in contact with you soon.'
+                />
+                <input type="hidden" name="_autoresponsesubject" value="Leader registration received - Gospel Conference 2026" />
+                <input type="hidden" name="_next" value="https://gospelconference.ca/register" />
+                <input type="hidden" name="_cc" value={email ?? ""} />
+                <input
+                  type="hidden"
+                  name="fullName"
+                  value={`${firstName} ${lastName}`.trim()}
+                />
+                <input
+                  type="hidden"
+                  name="_subject"
+                  value={`[LEADER REGISTRATION] - ${firstName} ${lastName}`.trim()}
+                />
+
+                {/* Honeypot field for spam protection - hidden from users */}
+                <input type="text" name="_gotcha" style={{ display: 'none' }} tabIndex={-1} autoComplete="off" />
+
+                {/* Row 1: First and Last */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4 relative z-10">
+                  <div className="relative z-10">
+                    <label className="block text-xs sm:text-xs font-semibold text-gray-700 mb-1.5 sm:mb-2 uppercase tracking-wide">
+                      First Name <span className="text-red-400">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      name="firstName"
+                      value={firstName}
+                      onChange={(e) => setFirstName(e.target.value)}
+                      required
+                      className="w-full px-3 sm:px-4 py-2 sm:py-2.5 bg-white border border-gray-200 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 text-sm sm:text-base transition-all shadow-sm hover:shadow-md relative z-10"
+                    />
+                  </div>
+                  <div className="relative z-10">
+                    <label className="block text-xs sm:text-xs font-semibold text-gray-700 mb-1.5 sm:mb-2 uppercase tracking-wide">
+                      Last Name <span className="text-red-400">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      name="lastName"
+                      value={lastName}
+                      onChange={(e) => setLastName(e.target.value)}
+                      required
+                      className="w-full px-3 sm:px-4 py-2 sm:py-2.5 bg-white border border-gray-200 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 text-sm sm:text-base transition-all shadow-sm hover:shadow-md relative z-10"
+                    />
+                  </div>
+                </div>
+
+                {/* Email */}
+                <div>
+                  <label className="block text-xs sm:text-xs font-semibold text-gray-700 mb-1.5 sm:mb-2 uppercase tracking-wide">
+                    Email Address <span className="text-red-400">*</span>
+                  </label>
+                  <input
+                    type="email"
+                    name="email"
+                    value={email}
+                    onChange={(e) => {
+                      setEmail(e.target.value)
+                      if (emailError) setEmailError("")
+                      if (formError) setFormError("")
+                    }}
+                    required
+                    className={`w-full px-3 sm:px-4 py-2 sm:py-2.5 bg-white border rounded-lg focus:outline-none focus:ring-2 text-base transition-all shadow-sm hover:shadow-md ${
+                      emailError
+                        ? "border-red-500 focus:border-red-500 focus:ring-red-500/20"
+                        : "border-gray-200 focus:border-blue-500 focus:ring-blue-500/20"
+                    }`}
+                  />
+                  {emailError && (
+                    <p className="text-red-500 text-xs mt-1">{emailError}</p>
+                  )}
+                </div>
+
+                {/* Church Name */}
+                <div>
+                  <label className="block text-xs sm:text-xs font-semibold text-gray-700 mb-1.5 uppercase tracking-wide">
+                    Church Name <span className="text-red-400">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    name="churchName"
+                    required
+                    className="w-full px-3 sm:px-4 py-2 sm:py-2.5 bg-white border border-gray-200 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 text-base transition-all shadow-sm hover:shadow-md"
+                  />
+                </div>
+
+                {/* Title */}
+                <div>
+                  <label className="block text-xs sm:text-xs font-semibold text-gray-700 mb-1.5 uppercase tracking-wide">
+                    Title (e.g., youth pastor, adult leader) <span className="text-red-400">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    name="title"
+                    required
+                    className="w-full px-3 sm:px-4 py-2 sm:py-2.5 bg-white border border-gray-200 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 text-base transition-all shadow-sm hover:shadow-md"
+                  />
+                </div>
+
+                {/* Who are you accompanying? */}
+                <div>
+                  <label className="block text-xs sm:text-xs font-semibold text-gray-700 mb-1.5 uppercase tracking-wide">
+                    Who are you accompanying? <span className="text-red-400">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    name="accompanying"
+                    required
+                    className="w-full px-3 sm:px-4 py-2 sm:py-2.5 bg-white border border-gray-200 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 text-base transition-all shadow-sm hover:shadow-md"
+                  />
+                </div>
+
+                {/* Row: Allergies and Photo Consent */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
+                  <div>
+                    <label className="block text-xs sm:text-xs font-semibold text-gray-700 mb-1.5 sm:mb-2 uppercase tracking-wide">
+                      Any allergies or food restrictions? <span className="text-red-400">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      name="allergies"
+                      required
+                      className="w-full px-3 sm:px-4 py-2 sm:py-2.5 bg-white border border-gray-200 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 text-sm sm:text-base transition-all shadow-sm hover:shadow-md"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs sm:text-xs font-semibold text-gray-700 mb-1.5 sm:mb-2 uppercase tracking-wide">
+                      Do you consent to having your photo taken? <span className="text-red-400">*</span>
+                    </label>
+                    <select
+                      name="photoConsent"
+                      required
+                      className="w-full px-3 sm:px-4 py-2 sm:py-2.5 bg-white border border-gray-200 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 text-sm sm:text-base transition-all shadow-sm hover:shadow-md"
+                    >
+                      <option value="">Select...</option>
+                      <option value="yes">Yes</option>
+                      <option value="yes_no_post">Yes, but you may not post</option>
+                    </select>
+                  </div>
+                </div>
+
+                {/* Special Notes */}
+                <div>
+                  <label className="block text-xs sm:text-xs font-semibold text-gray-700 mb-1.5 uppercase tracking-wide">
+                    Any special notes?
+                  </label>
+                  <textarea
+                    name="specialNotes"
+                    rows={3}
+                    className="w-full px-3 sm:px-4 py-2 sm:py-2.5 bg-white border border-gray-200 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 resize-none text-base transition-all shadow-sm hover:shadow-md"
+                  />
+                </div>
+
+                {/* Form Error Message */}
+                {formError && (
+                  <div className="mt-4 sm:mt-6 mb-2">
+                    <p className="text-red-500 text-xs sm:text-sm text-center">{formError}</p>
+                  </div>
+                )}
+
+                {/* Submit Button */}
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="w-full text-white font-bold py-3 sm:py-3.5 px-6 rounded-lg transition-all duration-200 text-xs sm:text-sm uppercase mt-4 sm:mt-6 hover:opacity-90 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-50 disabled:cursor-not-allowed"
+                  style={{ backgroundColor: '#428ce4' }}
+                >
+                  {isSubmitting ? 'SUBMITTING...' : 'SUBMIT LEADER REGISTRATION'}
+                </button>
+              </form>
             ) : (
             <form 
               onSubmit={handleSubmit}
@@ -281,7 +576,7 @@ function RegisterForm() {
             />
             <input type="hidden" name="_autoresponsesubject" value="Thank you for registering for Gospel Conference 2026!" />
             <input type="hidden" name="_next" value="https://gospelconference.ca/register" />
-            <input type="hidden" name="_cc" value={email} />
+            <input type="hidden" name="_cc" value={email ?? ""} />
             <input 
               type="hidden" 
               name="fullName" 
@@ -295,17 +590,17 @@ function RegisterForm() {
             <input 
               type="hidden" 
               name="paymentMethod" 
-              value={paymentMethod} 
+              value={paymentMethod ?? ""} 
             />
             <input 
               type="hidden" 
               name="Payment Method" 
               value={
-                paymentMethod === "e-transfer" 
+                (paymentMethod ?? "") === "e-transfer" 
                   ? "E-Transfer (Send to sheepgatefellowship@gmail.com)"
-                  : paymentMethod === "cash"
+                  : (paymentMethod ?? "") === "cash"
                   ? "Cash (Pay on the day of the event)"
-                  : paymentMethod === "cheque"
+                  : (paymentMethod ?? "") === "cheque"
                   ? "Cheque (Pay on the day of the event. Cheques payable to: Yang-Mun Korean Church)"
                   : ""
               } 
@@ -494,6 +789,9 @@ function RegisterForm() {
                   className="w-full px-3 sm:px-4 py-2 sm:py-2.5 bg-white border border-gray-200 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 text-sm sm:text-base transition-all shadow-sm hover:shadow-md"
                 >
                   <option value="">Select...</option>
+                  <option value="6" disabled>
+                    Grade 6 (Available from February 20)
+                  </option>
                   {[7, 8, 9, 10, 11, 12].map((grade) => (
                     <option key={grade} value={grade}>
                       Grade {grade}
@@ -697,6 +995,7 @@ function RegisterForm() {
               {isSubmitting ? 'SUBMITTING...' : 'SUBMIT REGISTRATION'}
             </button>
           </form>
+            )
           )}
           </div>
 
