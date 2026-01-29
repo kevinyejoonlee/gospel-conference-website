@@ -56,7 +56,7 @@ export default function Speakers() {
             </div>
             <p className="text-left text-black font-bold mb-1 uppercase text-lg sm:text-xl md:text-2xl lg:text-[27px]">SAM SONG</p>
             <p className="text-left text-xs sm:text-sm md:text-base text-black px-2 leading-tight min-h-[3rem] sm:min-h-[3.5rem] md:min-h-[4rem]">
-             Coming soon
+              Sam is a fourth year MDiv student at Westminster Theological Seminary in Pennsylvania, and he currently serves as the EM worship leader and Young Adults/College director at Jubilee Presbyterian Church. He was born in South Korea, but moved to New Zealand with his family when he was five, where he lived most of his life. He has been in the United States since 2022 for study, and is currently undercare in the KAPC North American Presbytery, preparing for pastoral ordination in the coming year. His passions are preaching and teaching the Gospel, Apologetics, and the GOAT debate (Michael Jordan of course). If you want to discuss any of the topics above, or you just want to hear his weird Kiwi accent, he is always happy to chat!
             </p>
           </div>
 
