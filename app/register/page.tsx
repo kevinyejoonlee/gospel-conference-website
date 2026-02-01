@@ -49,6 +49,19 @@ function RegisterForm() {
     return emailRegex.test(email)
   }
 
+  const getPaymentMethodLabel = (method: string): string => {
+    switch (method) {
+      case 'e-transfer':
+        return 'E-Transfer (Send to sheepgatefellowship@gmail.com)'
+      case 'cash':
+        return 'Cash (Pay on the day of the event)'
+      case 'cheque':
+        return 'Cheque (Pay on the day of the event. Cheques payable to: Yang-Mun Korean Church)'
+      default:
+        return ''
+    }
+  }
+
   const handleLeaderSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     setFormError("")
@@ -63,10 +76,28 @@ function RegisterForm() {
       setEmailError("")
     }
 
+    // Validate fee payment
+    if (!feePaid) {
+      setFormError("Please confirm that you have paid or will pay the registration fee")
+      setIsSubmitting(false)
+      return
+    }
+
+    // Validate payment method
+    if (!paymentMethod) {
+      setFormError("Please select a payment method")
+      setIsSubmitting(false)
+      return
+    }
+
     setIsSubmitting(true)
 
     const form = e.currentTarget
     const formData = new FormData(form)
+
+    // Ensure FormSubmit receives a readable payment method
+    formData.set("paymentMethod", paymentMethod ?? "")
+    formData.set("Payment Method", getPaymentMethodLabel(paymentMethod ?? ""))
 
     // Add unique timestamp to subject to prevent email threading - each submission is a new email
     const timestamp = Date.now()
@@ -148,6 +179,10 @@ function RegisterForm() {
     // Create FormData from the form
     const form = e.currentTarget
     const formData = new FormData(form)
+
+    // Ensure FormSubmit receives a readable payment method
+    formData.set('paymentMethod', paymentMethod ?? '')
+    formData.set('Payment Method', getPaymentMethodLabel(paymentMethod ?? ''))
     
     // Extract form data for Supabase
     const registrationData = {
@@ -329,7 +364,7 @@ function RegisterForm() {
                 className="w-full px-3 sm:px-4 py-2 sm:py-2.5 bg-white border border-gray-200 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 text-sm sm:text-base transition-all shadow-sm hover:shadow-md"
               >
                 <option value="student">Student</option>
-                <option value="leader">Pastor or adult leader of attendee(s)</option>
+                <option value="leader">Pastor/Adult</option>
               </select>
             </div>
 
@@ -338,29 +373,54 @@ function RegisterForm() {
                 <div className="bg-white rounded-lg p-8">
                   <div className="text-center">
                     <h2 className="text-2xl font-bold text-green-600 mb-4">Thank You!</h2>
-                    <p className="text-gray-700 mb-6">
-                      Your leader registration has been submitted successfully.
+                    <p className="text-gray-700 mb-4">
+                      Your registration has been submitted successfully. We will be in contact with you soon.
+                    </p>
+                    <p className="text-sm text-gray-600 font-semibold mb-6">
+                      📄 A receipt will be issued to your email upon confirmation. See you soon!
                     </p>
                   </div>
 
                   <div className="bg-blue-50 border border-blue-200 rounded-lg p-5">
                     <h3 className="text-sm sm:text-base font-bold text-gray-900 mb-2">
-                      Please pay for now
+                      Payment instructions
                     </h3>
                     <p className="text-sm text-gray-700 mb-3">
-                      Please complete your registration fee payment via e-Transfer.
+                      Payment method selected:{" "}
+                      <span className="font-semibold">
+                        {getPaymentMethodLabel(paymentMethod)}
+                      </span>
                     </p>
-                    <div className="bg-white rounded-lg border border-gray-200 p-4">
-                      <div className="text-xs font-semibold text-gray-700 mb-2 uppercase tracking-wide">
-                        Send e-Transfer to
+                    {paymentMethod === "e-transfer" ? (
+                      <div className="bg-white rounded-lg border border-gray-200 p-4">
+                        <div className="text-xs font-semibold text-gray-700 mb-2 uppercase tracking-wide">
+                          Send e-Transfer to
+                        </div>
+                        <code className="block text-sm font-mono text-gray-900 break-all">
+                          sheepgatefellowship@gmail.com
+                        </code>
+                        <p className="text-xs text-gray-600 mt-3">
+                          Please include{" "}
+                          <span className="font-semibold">
+                            "Gospel Conference Registration - {`${firstName} ${lastName}`.trim() || "Leader"}
+                          </span>
+                          " in the e-transfer notes.
+                        </p>
                       </div>
-                      <code className="block text-sm font-mono text-gray-900 break-all">
-                        sheepgatefellowship@gmail.com
-                      </code>
-                      <p className="text-xs text-gray-600 mt-3">
-                        Please include <span className="font-semibold">"Gospel Conference Registration - {`${firstName} ${lastName}`.trim() || "Leader"}</span>" in the e-transfer notes.
-                      </p>
-                    </div>
+                    ) : paymentMethod === "cash" ? (
+                      <div className="bg-white rounded-lg border border-gray-200 p-4">
+                        <p className="text-sm text-gray-700">
+                          Please bring cash to pay on the day of the event.
+                        </p>
+                      </div>
+                    ) : paymentMethod === "cheque" ? (
+                      <div className="bg-white rounded-lg border border-gray-200 p-4">
+                        <p className="text-sm text-gray-700">
+                          Please bring a cheque on the day of the event. Cheques payable to:{" "}
+                          <span className="font-semibold">Yang-Mun Korean Church</span>
+                        </p>
+                      </div>
+                    ) : null}
                   </div>
                 </div>
               ) : (
@@ -384,7 +444,7 @@ function RegisterForm() {
                 <input type="hidden" name="_captcha" value="false" />
                 <input type="hidden" name="_template" value="table" />
                 <input type="hidden" name="formType" value="LEADER_REGISTRATION" />
-                <input type="hidden" name="registrationType" value="Pastor or adult leader of attendee(s)" />
+                <input type="hidden" name="registrationType" value="Pastor/Adult" />
                 <input
                   type="hidden"
                   name="_autoresponse"
@@ -401,7 +461,7 @@ function RegisterForm() {
                 <input
                   type="hidden"
                   name="_subject"
-                  value={`[LEADER REGISTRATION] - ${firstName} ${lastName}`.trim()}
+                  value={`[REGISTRATION] - [LEADER] - ${firstName} ${lastName}`.trim()}
                 />
 
                 {/* Honeypot field for spam protection - hidden from users */}
@@ -479,7 +539,7 @@ function RegisterForm() {
                 {/* Title */}
                 <div>
                   <label className="block text-xs sm:text-xs font-semibold text-gray-700 mb-1.5 uppercase tracking-wide">
-                    Title (e.g., youth pastor, adult leader) <span className="text-red-400">*</span>
+                    Title (e.g., adult leader) <span className="text-red-400">*</span>
                   </label>
                   <input
                     type="text"
@@ -543,6 +603,128 @@ function RegisterForm() {
                   />
                 </div>
 
+                {/* Registration Fee Payment */}
+                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 sm:p-5 mb-4">
+                  <div className="mb-4">
+                    <label className="flex items-start gap-3 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        name="feePaid"
+                        checked={feePaid}
+                        onChange={(e) => {
+                          setFeePaid(e.target.checked)
+                          if (!e.target.checked) {
+                            setPaymentMethod("")
+                          }
+                          if (formError) setFormError("")
+                        }}
+                        required
+                        className="mt-1 h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                      />
+                      <div className="text-xs sm:text-sm text-gray-700">
+                        <span className="font-semibold text-red-600">* </span>
+                        I have paid or will pay the registration fee <span className="text-gray-600">($120)</span>.
+                      </div>
+                    </label>
+                  </div>
+
+                  {feePaid && (
+                    <div className="mb-4 border-t border-blue-200 pt-4">
+                      <p className="text-xs sm:text-sm font-semibold text-gray-700 mb-3">
+                        Payment Options <span className="text-red-600">*</span> (Please select one):
+                      </p>
+                      <div className="space-y-3">
+                        <label className="flex items-start gap-3 cursor-pointer group hover:bg-blue-100/50 rounded-lg p-2 -m-2 transition-colors">
+                          <input
+                            type="radio"
+                            name="paymentMethod"
+                            value="e-transfer"
+                            checked={paymentMethod === "e-transfer"}
+                            onChange={(e) => {
+                              setPaymentMethod(e.target.value)
+                              if (formError) setFormError("")
+                            }}
+                            required
+                            className="mt-1 h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300"
+                          />
+                          <div className="flex-1">
+                            <span className="text-xs sm:text-sm font-semibold text-gray-700 block mb-1">
+                              E-Transfer
+                            </span>
+                            <div className="text-xs text-gray-600 space-y-1">
+                              <div>
+                                Send to{" "}
+                                <span className="font-semibold text-gray-800">
+                                  sheepgatefellowship@gmail.com
+                                </span>
+                              </div>
+                              <div className="text-gray-500 italic">
+                                Please include{" "}
+                                <span className="font-semibold not-italic">"Gospel Conference"</span>{" "}
+                                in the e-transfer notes.
+                              </div>
+                            </div>
+                          </div>
+                        </label>
+
+                        <label className="flex items-start gap-3 cursor-pointer group hover:bg-blue-100/50 rounded-lg p-2 -m-2 transition-colors">
+                          <input
+                            type="radio"
+                            name="paymentMethod"
+                            value="cash"
+                            checked={paymentMethod === "cash"}
+                            onChange={(e) => {
+                              setPaymentMethod(e.target.value)
+                              if (formError) setFormError("")
+                            }}
+                            required
+                            className="mt-1 h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300"
+                          />
+                          <div className="flex-1">
+                            <span className="text-xs sm:text-sm font-semibold text-gray-700 block">
+                              Cash
+                            </span>
+                            <span className="text-xs text-gray-600 block mt-0.5">
+                              Pay on the day of the event
+                            </span>
+                          </div>
+                        </label>
+
+                        <label className="flex items-start gap-3 cursor-pointer group hover:bg-blue-100/50 rounded-lg p-2 -m-2 transition-colors">
+                          <input
+                            type="radio"
+                            name="paymentMethod"
+                            value="cheque"
+                            checked={paymentMethod === "cheque"}
+                            onChange={(e) => {
+                              setPaymentMethod(e.target.value)
+                              if (formError) setFormError("")
+                            }}
+                            required
+                            className="mt-1 h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300"
+                          />
+                          <div className="flex-1">
+                            <span className="text-xs sm:text-sm font-semibold text-gray-700 block">
+                              Cheque
+                            </span>
+                            <span className="text-xs text-gray-600 block mt-0.5">
+                              Pay on the day of the event. Cheques payable to:{" "}
+                              <span className="font-semibold">Yang-Mun Korean Church</span>
+                            </span>
+                          </div>
+                        </label>
+                      </div>
+                    </div>
+                  )}
+
+                  <div className="text-xs text-gray-600 leading-relaxed border-t border-blue-200 pt-3">
+                    <p className="font-semibold text-gray-700 mb-1">Non-Profit Disclaimer:</p>
+                    <p>
+                      Gospel Conference and Sheepgate Fellowship are non-profit organizations. All registration fees and donations are used solely to cover event costs (venue, materials, food, etc.) and are not used for profit or personal gain. All funds are managed transparently and used exclusively for the purpose of organizing and running Gospel Conference.
+                    </p>
+                  </div>
+                </div>
+
                 {/* Form Error Message */}
                 {formError && (
                   <div className="mt-4 sm:mt-6 mb-2">
@@ -557,7 +739,7 @@ function RegisterForm() {
                   className="w-full text-white font-bold py-3 sm:py-3.5 px-6 rounded-lg transition-all duration-200 text-xs sm:text-sm uppercase mt-4 sm:mt-6 hover:opacity-90 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-50 disabled:cursor-not-allowed"
                   style={{ backgroundColor: '#428ce4' }}
                 >
-                  {isSubmitting ? 'SUBMITTING...' : 'SUBMIT LEADER REGISTRATION'}
+                  {isSubmitting ? 'SUBMITTING...' : 'SUBMIT REGISTRATION'}
                 </button>
               </form>
             ) : (
@@ -586,24 +768,6 @@ function RegisterForm() {
               type="hidden" 
               name="_subject" 
               value={`[REGISTRATION] - ${firstName} ${lastName}`.trim()} 
-            />
-            <input 
-              type="hidden" 
-              name="paymentMethod" 
-              value={paymentMethod ?? ""} 
-            />
-            <input 
-              type="hidden" 
-              name="Payment Method" 
-              value={
-                (paymentMethod ?? "") === "e-transfer" 
-                  ? "E-Transfer (Send to sheepgatefellowship@gmail.com)"
-                  : (paymentMethod ?? "") === "cash"
-                  ? "Cash (Pay on the day of the event)"
-                  : (paymentMethod ?? "") === "cheque"
-                  ? "Cheque (Pay on the day of the event. Cheques payable to: Yang-Mun Korean Church)"
-                  : ""
-              } 
             />
             
             {/* Honeypot field for spam protection - hidden from users */}
@@ -790,7 +954,7 @@ function RegisterForm() {
                 >
                   <option value="">Select...</option>
                   <option value="6" disabled>
-                    Grade 6 (Available from February 20)
+                    Grade 6 (Available from February 15)
                   </option>
                   {[7, 8, 9, 10, 11, 12].map((grade) => (
                     <option key={grade} value={grade}>
@@ -874,15 +1038,9 @@ function RegisterForm() {
                     required
                     className="mt-1 h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
                   />
-                  <div className="text-xs sm:text-sm text-gray-700 space-y-1">
-                    <div>
-                      <span className="font-semibold text-red-600">* </span>
-                      I have paid or will pay the registration fee.
-                    </div>
-                    <div className="text-gray-600 pl-4">
-                      $100 in January, $120 in February
-                    </div>
-                  
+                  <div className="text-xs sm:text-sm text-gray-700">
+                    <span className="font-semibold text-red-600">* </span>
+                    I have paid or will pay the registration fee <span className="text-gray-600">($120)</span>.
                   </div>
                 </label>
               </div>

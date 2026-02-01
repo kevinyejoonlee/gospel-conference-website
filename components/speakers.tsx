@@ -55,8 +55,12 @@ export default function Speakers() {
               />
             </div>
             <p className="text-left text-black font-bold mb-1 uppercase text-lg sm:text-xl md:text-2xl lg:text-[27px]">SAM SONG</p>
-            <p className="text-left text-xs sm:text-sm md:text-base text-black px-2 leading-tight min-h-[3rem] sm:min-h-[3.5rem] md:min-h-[4rem]">
-              Sam is a fourth year MDiv student at Westminster Theological Seminary in Pennsylvania, and he currently serves as the EM worship leader and Young Adults/College director at Jubilee Presbyterian Church. He was born in South Korea, but moved to New Zealand with his family when he was five, where he lived most of his life. He has been in the United States since 2022 for study, and is currently undercare in the KAPC North American Presbytery, preparing for pastoral ordination in the coming year. His passions are preaching and teaching the Gospel, Apologetics, and the GOAT debate (Michael Jordan of course). If you want to discuss any of the topics above, or you just want to hear his weird Kiwi accent, he is always happy to chat!
+            <p className="text-left text-xs sm:text-sm md:text-base text-black px-2 leading-tight min-h-[3rem] sm:min-h-[3.5rem] md:min-h-[4rem] whitespace-pre-line">
+              {`Sam is a fourth year MDiv student at Westminster Theological Seminary in Pennsylvania, and he currently serves as the EM worship leader and Young Adults/College director at Jubilee Presbyterian Church.
+
+He was born in South Korea, but moved to New Zealand with his family when he was five, where he lived most of his life. He has been in the United States since 2022 for study, and is currently undercare in the KAPC North American Presbytery, preparing for pastoral ordination in the coming year.
+
+His passions are preaching and teaching the Gospel, Apologetics, and the GOAT debate (Michael Jordan of course). If you want to discuss any of the topics above, or you just want to hear his weird Kiwi accent, he is always happy to chat!`}
             </p>
           </div>
 
@@ -79,8 +83,12 @@ export default function Speakers() {
               />
             </div>
             <p className="text-left text-black font-bold mb-1 uppercase text-lg sm:text-xl md:text-2xl lg:text-[27px]">LYNDON JOST</p>
-            <p className="text-left text-xs sm:text-sm md:text-base text-black px-2 leading-tight min-h-[3rem] sm:min-h-[3.5rem] md:min-h-[4rem]">
-            Lyndon Jost is the Associate Pastor of Christ Church Toronto (PCA) and serves as the Director of the Reformed House of Studies at Wycliffe College at the University of Toronto. Previously he served as a pastor at Grace Toronto Church and before that worked with children and youth for a decade in urban and rural contexts in Canada and internationally. He and his wife, Lami, together with their four children live on the east side of Toronto.
+            <p className="text-left text-xs sm:text-sm md:text-base text-black px-2 leading-tight min-h-[3rem] sm:min-h-[3.5rem] md:min-h-[4rem] whitespace-pre-line">
+              {`Lyndon Jost is the Associate Pastor of Christ Church Toronto (PCA) and serves as the Director of the Reformed House of Studies at Wycliffe College at the University of Toronto.
+
+Previously he served as a pastor at Grace Toronto Church and before that worked with children and youth for a decade in urban and rural contexts in Canada and internationally.
+
+He and his wife, Lami, together with their four children live on the east side of Toronto.`}
             </p>
           </div>
 
@@ -103,8 +111,10 @@ export default function Speakers() {
               />
             </div>
             <p className="text-left text-black font-bold mb-1 uppercase text-lg sm:text-xl md:text-2xl lg:text-[27px]">JUHAN SONG</p>
-            <p className="text-left text-xs sm:text-sm md:text-base text-black px-2 leading-tight min-h-[3rem] sm:min-h-[3.5rem] md:min-h-[4rem]">
-            Juhan was born in Korea, raised in Toronto, and was recently married to Jessie. He is a recent graduate of Westminster Theological Seminary and is currently serving as an intern at Trinity OPC in Easton, PA.
+            <p className="text-left text-xs sm:text-sm md:text-base text-black px-2 leading-tight min-h-[3rem] sm:min-h-[3.5rem] md:min-h-[4rem] whitespace-pre-line">
+              {`Juhan was born in Korea, raised in Toronto, and was recently married to Jessie.
+
+He is a recent graduate of Westminster Theological Seminary and is currently serving as an intern at Trinity OPC in Easton, PA.`}
             </p>
           </div>
 
@@ -127,8 +137,12 @@ export default function Speakers() {
               />
             </div>
             <p className="text-left text-black font-bold mb-1 uppercase text-lg sm:text-xl md:text-2xl lg:text-[27px]">MAX PARK</p>
-            <p className="text-left text-xs sm:text-sm md:text-base text-black px-2 leading-tight min-h-[3rem] sm:min-h-[3.5rem] md:min-h-[4rem]">
-            Max received his Master of Divinity from Tyndale Seminary and has been serving as an Associate Pastor for Sheepgate since 2013. He is passionate about teaching God’s Word faithfully and truthfully to God’s people. He is the husband of Liz and hopes to be a father soon as the Lord wills.
+            <p className="text-left text-xs sm:text-sm md:text-base text-black px-2 leading-tight min-h-[3rem] sm:min-h-[3.5rem] md:min-h-[4rem] whitespace-pre-line">
+              {`Max received his Master of Divinity from Tyndale Seminary and has been serving as an Associate Pastor for Sheepgate since 2013.
+
+He is passionate about teaching God’s Word faithfully and truthfully to God’s people.
+
+He is the husband of Liz and hopes to be a father soon as the Lord wills.`}
             </p>
           </div>
         </div>
