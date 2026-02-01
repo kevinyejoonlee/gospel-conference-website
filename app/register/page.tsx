@@ -539,14 +539,17 @@ function RegisterForm() {
                 {/* Title */}
                 <div>
                   <label className="block text-xs sm:text-xs font-semibold text-gray-700 mb-1.5 uppercase tracking-wide">
-                    Title (e.g., adult leader) <span className="text-red-400">*</span>
+                    I am a: <span className="text-red-400">*</span>
                   </label>
-                  <input
-                    type="text"
+                  <select
                     name="title"
                     required
                     className="w-full px-3 sm:px-4 py-2 sm:py-2.5 bg-white border border-gray-200 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 text-base transition-all shadow-sm hover:shadow-md"
-                  />
+                  >
+                    <option value="">Select...</option>
+                    <option value="Pastor">Pastor</option>
+                    <option value="Other">Other</option>
+                  </select>
                 </div>
 
                 {/* Who are you accompanying? */}
