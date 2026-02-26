@@ -956,10 +956,7 @@ function RegisterForm() {
                   className="w-full px-3 sm:px-4 py-2 sm:py-2.5 bg-white border border-gray-200 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 text-sm sm:text-base transition-all shadow-sm hover:shadow-md"
                 >
                   <option value="">Select...</option>
-                  <option value="6" disabled>
-                    Grade 6 (Available from February 15)
-                  </option>
-                  {[7, 8, 9, 10, 11, 12].map((grade) => (
+                  {[6, 7, 8, 9, 10, 11, 12].map((grade) => (
                     <option key={grade} value={grade}>
                       Grade {grade}
                     </option>
