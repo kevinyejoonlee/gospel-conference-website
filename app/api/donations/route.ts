@@ -6,32 +6,31 @@ export const runtime = 'edge'
 // Force dynamic rendering for API routes
 export const dynamic = 'force-dynamic'
 
-// GET - Fetch total donations
+/** Snapshot from Supabase (2026-07-24) — used when the free-tier project is paused */
+const HARDCODED_TOTAL_RAISED = 10802
+
+// GET - Fetch total donations (live when available, else hardcoded snapshot)
 export async function GET() {
   try {
     const supabase = createServerClient()
-    
+
     const { data, error } = await supabase
       .from('donations')
       .select('amount')
-    
+
     if (error) {
-      console.error('Error fetching donations:', error)
-      return NextResponse.json(
-        { error: 'Failed to fetch donations' },
-        { status: 500 }
-      )
+      console.error('Error fetching donations, using hardcoded total:', error)
+      return NextResponse.json({ totalRaised: HARDCODED_TOTAL_RAISED })
     }
-    
+
     const totalRaised = data?.reduce((sum, donation) => sum + (donation.amount || 0), 0) || 0
-    
-    return NextResponse.json({ totalRaised })
+
+    return NextResponse.json({
+      totalRaised: totalRaised > 0 ? totalRaised : HARDCODED_TOTAL_RAISED,
+    })
   } catch (error) {
-    console.error('Error in GET /api/donations:', error)
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    )
+    console.error('Error in GET /api/donations, using hardcoded total:', error)
+    return NextResponse.json({ totalRaised: HARDCODED_TOTAL_RAISED })
   }
 }
 

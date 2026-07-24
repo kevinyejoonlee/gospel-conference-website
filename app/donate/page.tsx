@@ -25,7 +25,9 @@ function DonateForm() {
   const [copied, setCopied] = useState(false)
   const [showConfirmDialog, setShowConfirmDialog] = useState(false)
   const [pendingDonation, setPendingDonation] = useState<{amount: number, name: string, email: string} | null>(null)
-  const [totalRaised, setTotalRaised] = useState(0)
+  // Snapshot from Supabase (2026-07-24) — shown even if the free-tier DB is paused
+  const HARDCODED_TOTAL_RAISED = 10802
+  const [totalRaised, setTotalRaised] = useState(HARDCODED_TOTAL_RAISED)
   const [isLoadingTotal, setIsLoadingTotal] = useState(true)
   const [formError, setFormError] = useState<string>("")
   const goal = 8500
@@ -34,14 +36,14 @@ function DonateForm() {
   const predefinedAmounts = [50, 100, 150, 200, 300, 500]
   const email = "sheepgatefellowship@gmail.com"
 
-  // Fetch total donations on mount
+  // Prefer live total when Supabase is up; keep hardcoded snapshot as fallback
   useEffect(() => {
     const fetchTotalDonations = async () => {
       try {
         const response = await fetch('/api/donations')
         if (response.ok) {
           const data = await response.json()
-          setTotalRaised(data.totalRaised || 0)
+          setTotalRaised(data.totalRaised || HARDCODED_TOTAL_RAISED)
         }
       } catch (error) {
         console.error('Error fetching total donations:', error)
@@ -147,7 +149,7 @@ function DonateForm() {
             const totalResponse = await fetch('/api/donations')
             if (totalResponse.ok) {
               const totalData = await totalResponse.json()
-              setTotalRaised(totalData.totalRaised || 0)
+              setTotalRaised(totalData.totalRaised || HARDCODED_TOTAL_RAISED)
             }
           } catch (error) {
             console.error('Error updating total:', error)
